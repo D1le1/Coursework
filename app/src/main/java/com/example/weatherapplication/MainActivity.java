@@ -37,7 +37,7 @@ public class MainActivity extends AppCompatActivity{
             City city = Gestures.Swipe.swipeCities(event, cities);
             ((TextView)findViewById(R.id.city_name)).setText(city.getName() + ", " + city.getCountry());
             ((TextView)findViewById(R.id.temperature)).setText(city.getDegrees() + "°C");
-            ((TextView)findViewById(R.id.temp_range)).setText(city.getMaxDegrees() + "°C/" + city.getMinDegrees() + "°C");
+            ((TextView)findViewById(R.id.temp_range)).setText(city.getMaxDegrees() + "°C / " + city.getMinDegrees() + "°C");
             ((TextView)findViewById(R.id.status)).setText(city.getStatus());
         }catch (Exception e){}
     }
