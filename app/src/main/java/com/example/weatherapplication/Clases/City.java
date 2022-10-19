@@ -6,11 +6,9 @@ public class City {
     private String name;
     private String country;
     private int degrees;
-    private Date date = new Date();
     private int maxDegrees;
     private int minDegrees;
     private String status;
-//    private int index;
 
     public City(String name, String country, int degrees, int maxDegrees, int minDegrees, String status) {
         this.name = name;
@@ -19,7 +17,6 @@ public class City {
         this.maxDegrees = maxDegrees;
         this.minDegrees = minDegrees;
         this.status = status;
-//        this.index = index;
     }
 
     public String getName() {
@@ -34,10 +31,6 @@ public class City {
         return degrees;
     }
 
-    public Date getDate() {
-        return date;
-    }
-
     public int getMaxDegrees() {
         return maxDegrees;
     }
@@ -49,8 +42,4 @@ public class City {
     public String getStatus() {
         return status;
     }
-
-//    public int getIndex(){
-//        return index;
-//    }
 }

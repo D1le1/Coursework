@@ -7,6 +7,7 @@ import android.view.MotionEvent;
 import android.widget.TextView;
 
 import com.example.weatherapplication.Clases.City;
+import com.example.weatherapplication.Functions.DateFunctions;
 import com.example.weatherapplication.Functions.Gestures;
 
 import java.util.ArrayList;
@@ -19,6 +20,7 @@ public class MainActivity extends AppCompatActivity{
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        ((TextView)findViewById(R.id.date)).setText(DateFunctions.getDate());
         cities.add(new City("Minsk", "Belarus", 10, 10, -1, "Mostly Cloudy"));
         cities.add(new City("Babruysk", "Belarus", 8, 13, 2, "Mostly Sunny"));
         cities.add(new City("Gomel", "Belarus", 3, 7, -4, "Sunny"));
