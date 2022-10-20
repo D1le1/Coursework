@@ -3,6 +3,7 @@ package com.example.weatherapplication.data;
 import android.util.Log;
 import android.widget.Toast;
 
+import com.example.weatherapplication.MainActivity;
 import com.example.weatherapplication.util.Utils;
 
 import java.io.BufferedReader;
@@ -39,7 +40,7 @@ public class WeatherHttpClient {
 
             return stringBuffer.toString();
         }catch (IOException e){
-            e.printStackTrace();
+//            Toast.makeText(MainActivity.class, "123", Toast.LENGTH_SHORT);
         }
 
         return null;

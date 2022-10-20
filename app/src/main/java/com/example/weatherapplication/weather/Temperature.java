@@ -19,7 +19,7 @@ public class Temperature {
         return maxTemp;
     }
 
-    public float getTemperature() {
+    public float getCurrantTemperature() {
         return temperature;
     }
 }
