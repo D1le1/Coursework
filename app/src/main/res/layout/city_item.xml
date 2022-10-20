@@ -6,7 +6,6 @@
     android:layout_height="match_parent"
     android:background="@color/main_bg_color"
     tools:ignore="MissingConstraints">
-
     <TextView
         android:id="@+id/city_name"
         android:layout_width="wrap_content"
@@ -38,9 +37,23 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/degree"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:clickable="false"
+        android:fontFamily="@font/montserrat_thin"
+        android:text="@string/degree"
+        android:textColor="@color/white"
+        android:textSize="40sp"
+        android:textStyle="bold"
+        app:layout_constraintBottom_toTopOf="@+id/status"
+        app:layout_constraintStart_toEndOf="@+id/temperature" />
+
+    <TextView
         android:id="@+id/status"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="50dp"
         android:clickable="false"
         android:fontFamily="@font/montserrat_thin"
@@ -78,6 +91,5 @@
         android:textStyle="bold"
         app:layout_constraintStart_toEndOf="@+id/date"
         app:layout_constraintTop_toBottomOf="@+id/temperature" />
-
 
 </androidx.constraintlayout.widget.ConstraintLayout>

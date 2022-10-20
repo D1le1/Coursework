@@ -36,7 +36,7 @@ public class CityItem extends Fragment {
         status = view.findViewById(R.id.status);
         date = view.findViewById(R.id.date);
         name.setText(city.getName() + ", " + city.getCountry());
-        temperature.setText(city.getDegrees() + "°C");
+        temperature.setText(String.valueOf(city.getDegrees()));
         tempRange.setText(city.getMaxDegrees() + "°C / " + city.getMinDegrees() + "°C");
         status.setText(city.getStatus());
         date.setText(DateFunctions.getDate());
