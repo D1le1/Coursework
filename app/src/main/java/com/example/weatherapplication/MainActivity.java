@@ -29,18 +29,13 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
     private ArrayList<Fragment> cities = new ArrayList<>();
-    private SwipeRefreshLayout swipeContainer;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.test);
-        swipeContainer = findViewById(R.id.ref);
+        setContentView(R.layout.activity_main);
+
         loadInfo();
-//        ref.setOnRefreshListener(() -> {
-//            Log.v("Data: ", "Refreshed");
-//            ref.setRefreshing(false);
-//        });
     }
 
 
