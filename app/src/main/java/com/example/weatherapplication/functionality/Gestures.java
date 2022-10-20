@@ -1,8 +1,8 @@
-package com.example.weatherapplication.Functions;
+package com.example.weatherapplication.functionality;
 
 import android.view.MotionEvent;
 
-import com.example.weatherapplication.Clases.City;
+import com.example.weatherapplication.classes.City;
 
 import java.util.ArrayList;
 
@@ -35,7 +35,7 @@ public class Gestures {
                         {
                             index--;
                             if (index < 0)
-                                index = 2;
+                                index = cities.size() - 1;
                         }
                         return cities.get(index);
                     }

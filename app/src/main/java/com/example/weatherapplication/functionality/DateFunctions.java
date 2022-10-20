@@ -1,6 +1,4 @@
-package com.example.weatherapplication.Functions;
-
-import androidx.annotation.NonNull;
+package com.example.weatherapplication.functionality;
 
 import java.util.Calendar;
 import java.util.Date;

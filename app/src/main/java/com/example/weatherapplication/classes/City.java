@@ -1,6 +1,4 @@
-package com.example.weatherapplication.Clases;
-
-import java.util.Date;
+package com.example.weatherapplication.classes;
 
 public class City {
     private String name;
