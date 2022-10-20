@@ -40,4 +40,9 @@ public class City {
     public String getStatus() {
         return status;
     }
+
+    @Override
+    public String toString() {
+        return name + ", " + country;
+    }
 }
