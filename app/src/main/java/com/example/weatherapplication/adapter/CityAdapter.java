@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapplication.R;
 import com.example.weatherapplication.classes.City;
+import com.example.weatherapplication.functionality.DateFunctions;
 
 import java.util.ArrayList;
 
@@ -37,6 +38,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
         holder.temperature.setText(cities.get(position).getDegrees() + "°C");
         holder.tempRange.setText(cities.get(position).getMinDegrees() + "°C / " + cities.get(position).getMaxDegrees() + "°C");
         holder.status.setText(cities.get(position).getStatus());
+        holder.date.setText(DateFunctions.getDate());
     }
 
     @Override
@@ -46,7 +48,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
 
     public static final class CityViewHolder extends RecyclerView.ViewHolder {
 
-        TextView name, temperature, tempRange, status;
+        TextView name, temperature, tempRange, status, date;
 
         public CityViewHolder(@NonNull View itemView) {
             super(itemView);
@@ -55,6 +57,7 @@ public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder
             temperature = itemView.findViewById(R.id.temperature);
             tempRange = itemView.findViewById(R.id.temp_range);
             status = itemView.findViewById(R.id.status);
+            date = itemView.findViewById(R.id.date);
         }
     }
 }

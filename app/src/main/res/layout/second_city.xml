@@ -5,15 +5,19 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@color/main_bg_color"
+    tools:context=".MainActivity"
     tools:ignore="MissingConstraints">
 
-    <androidx.viewpager.widget.ViewPager
-        android:id="@+id/pager"
+    <TextView
+        android:id="@+id/textView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:contentDescription="@string/app_name"
+        android:fontFamily="@font/montserrat_bold"
+        android:text="Second Page"
+        android:textColor="@color/white"
+        android:textSize="50sp"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"></androidx.viewpager.widget.ViewPager>
+        app:layout_constraintTop_toTopOf="parent" />
 </androidx.constraintlayout.widget.ConstraintLayout>
