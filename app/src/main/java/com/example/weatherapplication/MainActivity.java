@@ -17,11 +17,7 @@ import com.example.weatherapplication.classes.City;
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
-//    private CityAdapter cityAdapter;
-//    private RecyclerView cityRecycler;
     private ArrayList<City> cities = new ArrayList<>();
-    private ViewPager vp;
-    private PagerAdapter pa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -31,17 +27,12 @@ public class MainActivity extends AppCompatActivity{
         cities.add(new City("Babruysk", "Belarus", 8, 13, 2, "Mostly Sunny"));
         cities.add(new City("Gomel", "Belarus", 3, 7, -4, "Sunny"));
         cities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Rain"));
-//        setCitiesRecycler(cities);
-
+        cities.add(new City("Chicago", "USA", 17, 23, 15, "Partly Cloudy"));
 
         ArrayList<Fragment>list = createFragments();
-
-        vp = findViewById(R.id.pager);
-        pa = new SlidePagerAdapter(getSupportFragmentManager(), list);
-
-        vp.setAdapter(pa);
-
-
+        ViewPager viewPager = findViewById(R.id.pager);;
+        PagerAdapter pagerAdapter = new SlidePagerAdapter(getSupportFragmentManager(), list);;
+        viewPager.setAdapter(pagerAdapter);
     }
 
     public ArrayList<Fragment> createFragments()
@@ -53,14 +44,4 @@ public class MainActivity extends AppCompatActivity{
         }
         return list;
     }
-
-//    public void setCitiesRecycler(ArrayList<City> cities)
-//    {
-//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-//        cityRecycler = findViewById(R.id.citiesRecycler);
-//        cityRecycler.setLayoutManager(layoutManager);
-//
-//        cityAdapter = new CityAdapter(this, cities);
-//        cityRecycler.setAdapter(cityAdapter);
-//    }
 }

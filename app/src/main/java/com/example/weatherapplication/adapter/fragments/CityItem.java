@@ -42,21 +42,4 @@ public class CityItem extends Fragment {
         date.setText(DateFunctions.getDate());
         return view;
     }
-
-    public static final class CityViewHolder extends RecyclerView.ViewHolder {
-
-        TextView name, temperature, tempRange, status, date;
-
-        public CityViewHolder(@NonNull View view) {
-            super(view);
-
-            name = view.findViewById(R.id.city_name);
-            temperature = view.findViewById(R.id.temperature);
-            tempRange = view.findViewById(R.id.temp_range);
-            status = view.findViewById(R.id.status);
-            date = view.findViewById(R.id.date);
-        }
-    }
-
-
 }
