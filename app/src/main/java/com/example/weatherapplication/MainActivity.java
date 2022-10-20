@@ -1,63 +1,66 @@
 package com.example.weatherapplication;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.constraintlayout.widget.ConstraintLayout;
+import androidx.fragment.app.Fragment;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
+import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import android.os.Bundle;
-import android.view.MotionEvent;
-import android.widget.TextView;
 
 import com.example.weatherapplication.adapter.CityAdapter;
+import com.example.weatherapplication.adapter.SlidePagerAdapter;
+import com.example.weatherapplication.adapter.fragments.CityItem;
 import com.example.weatherapplication.classes.City;
-import com.example.weatherapplication.functionality.DateFunctions;
-import com.example.weatherapplication.functionality.Gestures;
 
 import java.util.ArrayList;
 
 public class MainActivity extends AppCompatActivity{
-    CityAdapter cityAdapter;
-    RecyclerView cityRecycler;
+//    private CityAdapter cityAdapter;
+//    private RecyclerView cityRecycler;
     private ArrayList<City> cities = new ArrayList<>();
+    private ViewPager vp;
+    private PagerAdapter pa;
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-//        ((TextView)findViewById(R.id.date)).setText(DateFunctions.getDate());
         cities.add(new City("Minsk", "Belarus", 10, 10, -1, "Mostly Cloudy"));
         cities.add(new City("Babruysk", "Belarus", 8, 13, 2, "Mostly Sunny"));
         cities.add(new City("Gomel", "Belarus", 3, 7, -4, "Sunny"));
         cities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Rain"));
-        setCitiesRecycler(cities);
+//        setCitiesRecycler(cities);
+
+
+        ArrayList<Fragment>list = createFragments();
+
+        vp = findViewById(R.id.pager);
+        pa = new SlidePagerAdapter(getSupportFragmentManager(), list);
+
+        vp.setAdapter(pa);
+
 
     }
-    public void setCitiesRecycler(ArrayList<City> cities)
+
+    public ArrayList<Fragment> createFragments()
     {
-        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
-        cityRecycler = findViewById(R.id.citiesRecycler);
-        cityRecycler.setLayoutManager(layoutManager);
-
-        cityAdapter = new CityAdapter(this, cities);
-        cityRecycler.setAdapter(cityAdapter);
+        ArrayList<Fragment> list = new ArrayList<>();
+        for (City city : cities)
+        {
+            list.add(new CityItem(city));
+        }
+        return list;
     }
 
-//    @Override
-//    public boolean onTouchEvent(MotionEvent event)
+//    public void setCitiesRecycler(ArrayList<City> cities)
 //    {
-//        changeBySwipe(event);
-//        return super.onTouchEvent(event);
-//    }
+//        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, RecyclerView.HORIZONTAL, false);
+//        cityRecycler = findViewById(R.id.citiesRecycler);
+//        cityRecycler.setLayoutManager(layoutManager);
 //
-//    private void changeBySwipe(MotionEvent event)
-//    {
-//        try {
-//            City city = Gestures.Swipe.swipeCities(event, cities);
-//            ((TextView)findViewById(R.id.city_name)).setText(city.getName() + ", " + city.getCountry());
-//            ((TextView)findViewById(R.id.temperature)).setText(city.getDegrees() + "°C");
-//            ((TextView)findViewById(R.id.temp_range)).setText(city.getMaxDegrees() + "°C / " + city.getMinDegrees() + "°C");
-//            ((TextView)findViewById(R.id.status)).setText(city.getStatus());
-//        }catch (Exception e){}
+//        cityAdapter = new CityAdapter(this, cities);
+//        cityRecycler.setAdapter(cityAdapter);
 //    }
 }
