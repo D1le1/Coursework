@@ -10,9 +10,11 @@ import android.widget.Toast;
 import androidx.annotation.NonNull;
 import androidx.viewpager.widget.PagerAdapter;
 
+import com.example.weatherapplication.MainActivity;
 import com.example.weatherapplication.R;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.functionality.DateFunctions;
+import com.example.weatherapplication.functionality.NetworkDetector;
 
 import java.util.ArrayList;
 
@@ -41,19 +43,25 @@ public class MyAdapter extends PagerAdapter {
     public Object instantiateItem(@NonNull ViewGroup container, int position) {
         View view = LayoutInflater.from(context).inflate(R.layout.city_item, container, false);
 
-        TextView name, temperature, tempRange, status, date;
+        TextView name, temperature, tempRange, status, date, net_connect;
 
         name = view.findViewById(R.id.city_name);
         temperature = view.findViewById(R.id.temperature);
         tempRange = view.findViewById(R.id.temp_range);
         status = view.findViewById(R.id.status);
         date = view.findViewById(R.id.date);
+        net_connect = view.findViewById(R.id.net_error);
 
         name.setText(cities.get(position).getName() + ", " + cities.get(position).getCountry());
         temperature.setText(String.valueOf(cities.get(position).getDegrees()));
         tempRange.setText(cities.get(position).getMaxDegrees() + "°C / " + cities.get(position).getMinDegrees() + "°C");
         status.setText(cities.get(position).getStatus());
         date.setText(DateFunctions.getDate());
+        net_connect.setVisibility(view.INVISIBLE);
+        if (!NetworkDetector.isConnected(context))
+        {
+//            net_connect.setVisibility(view.VISIBLE);
+        }
 
         container.addView(view, 0);
 

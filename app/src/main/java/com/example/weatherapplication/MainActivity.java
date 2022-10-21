@@ -26,6 +26,7 @@ public class MainActivity extends AppCompatActivity{
     private ArrayList<City> cities;
     private ViewPager viewPager;
     private MyAdapter adapter;
+    private TextView netError;
     SwipeRefreshLayout refresher;
 
     @Override
@@ -36,6 +37,7 @@ public class MainActivity extends AppCompatActivity{
         viewPager = findViewById(R.id.pager);
         cities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
+        netError = findViewById(R.id.net_error);
 
         loadInfo();
 
@@ -84,15 +86,18 @@ public class MainActivity extends AppCompatActivity{
 
     public void loadInfo()
     {
+        netError.setVisibility(View.VISIBLE);
+
         if (NetworkDetector.isConnected(this)) {
             cities.clear();
+
+            netError.setVisibility(View.INVISIBLE);
+
             renderWeatherData("Minsk");
             renderWeatherData("Babruysk");
             renderWeatherData("Gomel");
             renderWeatherData("Zhlobin");
             renderWeatherData("Chicago");
-            ((TextView)findViewById(R.id.net_error)).setVisibility(View.INVISIBLE);
-            ((ViewPager)findViewById(R.id.pager)).setVisibility(View.VISIBLE);
         }
         else
         {
