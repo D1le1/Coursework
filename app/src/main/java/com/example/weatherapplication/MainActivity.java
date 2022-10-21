@@ -7,6 +7,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
 import com.example.weatherapplication.adapter.MyAdapter;
@@ -23,18 +24,49 @@ import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
     private ArrayList<City> cities;
-    private ViewPager vp;
+    private ViewPager viewPager;
     private MyAdapter adapter;
+    SwipeRefreshLayout refresher;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        vp = findViewById(R.id.pager);
-        cities = new ArrayList<>();
-        loadCard();
 
-//        loadInfo();
+        viewPager = findViewById(R.id.pager);
+        cities = new ArrayList<>();
+        refresher = findViewById(R.id.refresher);
+
+        loadInfo();
+
+        refresher.setOnRefreshListener(() -> {
+            loadInfo();
+            refresher.setRefreshing(false);
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                toggleRefreshing(state == ViewPager.SCROLL_STATE_IDLE);
+            }
+
+            private void toggleRefreshing(boolean b) {
+                if(refresher != null)
+                {
+                    refresher.setEnabled(b);
+                }
+            }
+        });
     }
 
     private void loadCard() {
@@ -47,17 +79,7 @@ public class MainActivity extends AppCompatActivity{
         cities.add(new City("Chicago", "USA", 17, 23, 15, "Partly Cloudy"));
 
         adapter = new MyAdapter(this, cities);
-        vp.setAdapter(adapter);
-    }
-
-
-    @Override
-    public boolean onTouchEvent(MotionEvent event) {
-        if (event.getAction() == 0)
-        {
-            loadInfo();
-        }
-        return super.onTouchEvent(event);
+        viewPager.setAdapter(adapter);
     }
 
     public void loadInfo()
@@ -74,17 +96,7 @@ public class MainActivity extends AppCompatActivity{
         }
         else
         {
-//            cities.clear();
-//            cities.add(new CityItem(new City("Minsk", "BY", 10, 10, -1, "Mostly Cloudy")));
-//            cities.add(new CityItem(new City("Babruysk", "BY", 8, 13, 2, "Mostly Sunny")));
-//            cities.add(new CityItem(new City("Gomel", "BY", 3, 7, -4, "Sunny")));
-//            cities.add(new CityItem(new City("Washington D.C.", "USA", 15, 19, 10, "Rain")));
-//            cities.add(new CityItem(new City("Chicago", "USA", 17, 23, 15, "Partly Cloudy")));
-//            ViewPager viewPager = findViewById(R.id.pager);
-//            PagerAdapter pagerAdapter = new SlidePagerAdapter(getSupportFragmentManager(), cities);
-//            viewPager.setAdapter(pagerAdapter);
-            ((TextView)findViewById(R.id.net_error)).setVisibility(View.VISIBLE);
-            ((ViewPager)findViewById(R.id.pager)).setVisibility(View.INVISIBLE);
+            loadCard();
         }
     }
 
@@ -112,10 +124,9 @@ public class MainActivity extends AppCompatActivity{
             City city = (new City(weather.getPlace().getCity(), weather.getPlace().getCountry(),
                     (int) Math.ceil(weather.getTemperature().getCurrantTemperature()), (int) Math.ceil(weather.getTemperature().getMaxTemp()),
                     (int) Math.ceil(weather.getTemperature().getMinTemp()), formatStatus(weather.getStatus())));
-//            cities.add(city);
-//            ViewPager viewPager = findViewById(R.id.pager);
-//            MyAdapter adapter = new MyAdapter(MainActivity.this, cities);
-//            viewPager.setAdapter(adapter);
+            cities.add(city);
+            adapter = new MyAdapter(MainActivity.this, cities);
+            viewPager.setAdapter(adapter);
         }
     }
 
