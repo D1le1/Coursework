@@ -15,12 +15,12 @@ import com.example.weatherapplication.functionality.DateFunctions;
 
 import java.util.ArrayList;
 
-public class CityAdapter extends RecyclerView.Adapter<CityAdapter.CityViewHolder> {
+public class RecyclerAdapter extends RecyclerView.Adapter<RecyclerAdapter.CityViewHolder> {
 
     private Context context;
     private ArrayList<City> cities;
 
-    public CityAdapter(Context context, ArrayList<City> cities) {
+    public RecyclerAdapter(Context context, ArrayList<City> cities) {
         this.context = context;
         this.cities = cities;
     }

@@ -2,20 +2,14 @@ package com.example.weatherapplication;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
-import android.widget.VideoView;
 
 import androidx.appcompat.app.AppCompatActivity;
-import androidx.fragment.app.Fragment;
-import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
-import androidx.viewpager.widget.PagerAdapter;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.weatherapplication.adapter.SlidePagerAdapter;
-import com.example.weatherapplication.adapter.fragments.CityItem;
+import com.example.weatherapplication.adapter.MyAdapter;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.data.JSONWeatherParser;
 import com.example.weatherapplication.data.WeatherHttpClient;
@@ -28,14 +22,32 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
-    private ArrayList<Fragment> cities = new ArrayList<>();
+    private ArrayList<City> cities;
+    private ViewPager vp;
+    private MyAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        vp = findViewById(R.id.pager);
+        cities = new ArrayList<>();
+        loadCard();
 
-        loadInfo();
+//        loadInfo();
+    }
+
+    private void loadCard() {
+        cities = new ArrayList<>();
+
+        cities.add(new City("Minsk", "BY", 10, 10, -1, "Mostly Cloudy"));
+        cities.add(new City("Babruysk", "BY", 8, 13, 2, "Mostly Sunny"));
+        cities.add(new City("Gomel", "BY", 3, 7, -4, "Sunny"));
+        cities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Rain"));
+        cities.add(new City("Chicago", "USA", 17, 23, 15, "Partly Cloudy"));
+
+        adapter = new MyAdapter(this, cities);
+        vp.setAdapter(adapter);
     }
 
 
@@ -100,10 +112,10 @@ public class MainActivity extends AppCompatActivity{
             City city = (new City(weather.getPlace().getCity(), weather.getPlace().getCountry(),
                     (int) Math.ceil(weather.getTemperature().getCurrantTemperature()), (int) Math.ceil(weather.getTemperature().getMaxTemp()),
                     (int) Math.ceil(weather.getTemperature().getMinTemp()), formatStatus(weather.getStatus())));
-            cities.add(new CityItem(city));
-            ViewPager viewPager = findViewById(R.id.pager);
-            PagerAdapter pagerAdapter = new SlidePagerAdapter(getSupportFragmentManager(), cities);
-            viewPager.setAdapter(pagerAdapter);
+//            cities.add(city);
+//            ViewPager viewPager = findViewById(R.id.pager);
+//            MyAdapter adapter = new MyAdapter(MainActivity.this, cities);
+//            viewPager.setAdapter(adapter);
         }
     }
 

@@ -9,13 +9,10 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.fragment.app.Fragment;
-import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapplication.R;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.functionality.DateFunctions;
-
-import java.util.ArrayList;
 
 public class CityItem extends Fragment {
     private City city;
