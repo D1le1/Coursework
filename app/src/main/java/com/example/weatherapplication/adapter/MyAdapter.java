@@ -41,6 +41,7 @@ public class MyAdapter extends PagerAdapter {
         icons.put("Snow", R.drawable.sn);
         icons.put("Mist", R.drawable.m);
         icons.put("Overcast clouds", R.drawable.bc);
+        icons.put("Light rain", R.drawable.r);
     }
 
 

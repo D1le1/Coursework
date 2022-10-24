@@ -6,6 +6,7 @@ import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.Gravity;
 import android.view.View;
+import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity{
     private MyAdapter adapter;
     private TextView netError;
     private SwipeRefreshLayout refresher;
+    private ImageView city;
 
     @SuppressLint("MissingInflatedId")
     @Override
@@ -45,6 +47,14 @@ public class MainActivity extends AppCompatActivity{
         onlineCities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
         netError = findViewById(R.id.net_error);
+        city = findViewById(R.id.cities);
+
+        city.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
+            }
+        });
 
         loadCard();
         loadInfo();
@@ -70,9 +80,8 @@ public class MainActivity extends AppCompatActivity{
     {
         refresher.setRefreshing(true);
 
-        onlineCities.clear();
-
         if (NetworkDetector.isConnected(this)) {
+            onlineCities.clear();
             renderWeatherData("Minsk");
             renderWeatherData("Babruysk");
             renderWeatherData("Gomel");
@@ -82,9 +91,6 @@ public class MainActivity extends AppCompatActivity{
         else{
             refresher.setRefreshing(false);
             netError.setVisibility(View.VISIBLE);
-            Toast t = Toast.makeText(this, "Turn On \"Mobile Data\" or Use Wi-Fi to Access", Toast.LENGTH_LONG);
-            t.setGravity(Gravity.CENTER, 0, 0);
-            t.show();
         }
     }
 
