@@ -126,16 +126,14 @@ public class MainActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
-            City city = (new City(weather.getPlace().getCity(), weather.getPlace().getCountry(),
-                    (int) Math.ceil(weather.getTemperature().getCurrantTemperature()), (int) Math.ceil(weather.getTemperature().getMaxTemp()),
-                    (int) Math.ceil(weather.getTemperature().getMinTemp()), formatStatus(weather.getStatus())));
+            City city = new City(weather);
             cities.add(city);
             adapter = new MyAdapter(MainActivity.this, cities);
             viewPager.setAdapter(adapter);
         }
     }
 
-    public String formatStatus(String status)
+    public static String formatStatus(String status)
     {
         String[] temp = status.split(" ");
         if (temp.length > 1)
