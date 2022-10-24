@@ -39,9 +39,7 @@ public class WeatherHttpClient {
             connection.disconnect();
 
             return stringBuffer.toString();
-        }catch (IOException e){
-//            Toast.makeText(MainActivity.class, "123", Toast.LENGTH_SHORT);
-        }
+        }catch (IOException e){}
 
         return null;
     }
