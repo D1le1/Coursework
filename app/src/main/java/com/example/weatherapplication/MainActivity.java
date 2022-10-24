@@ -2,7 +2,6 @@ package com.example.weatherapplication;
 
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.MotionEvent;
 import android.view.View;
 import android.widget.TextView;
 
@@ -23,7 +22,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
-    private ArrayList<City> cities;
+    private ArrayList<City> offlineCities;
+    private ArrayList<City> onlineCities;
     private ViewPager viewPager;
     private MyAdapter adapter;
     private TextView netError;
@@ -35,73 +35,45 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         viewPager = findViewById(R.id.pager);
-        cities = new ArrayList<>();
+        offlineCities = new ArrayList<>();
+        onlineCities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
         netError = findViewById(R.id.net_error);
 
+        loadCard();
         loadInfo();
 
         refresher.setOnRefreshListener(() -> {
             loadInfo();
-            refresher.setRefreshing(false);
-        });
-
-        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-            @Override
-            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-
-            }
-
-            @Override
-            public void onPageSelected(int position) {
-
-            }
-
-            @Override
-            public void onPageScrollStateChanged(int state) {
-                toggleRefreshing(state == ViewPager.SCROLL_STATE_IDLE);
-            }
-
-            private void toggleRefreshing(boolean b) {
-                if(refresher != null)
-                {
-                    refresher.setEnabled(b);
-                }
-            }
         });
     }
 
     private void loadCard() {
-        cities = new ArrayList<>();
+        offlineCities.add(new City("Minsk", "BY", 10, 10, -1, "Mostly Cloudy"));
+        offlineCities.add(new City("Babruysk", "BY", 8, 13, 2, "Mostly Sunny"));
+        offlineCities.add(new City("Gomel", "BY", 3, 7, -4, "Sunny"));
+        offlineCities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Rain"));
+        offlineCities.add(new City("Chicago", "USA", 17, 23, 15, "Partly Cloudy"));
 
-        cities.add(new City("Minsk", "BY", 10, 10, -1, "Mostly Cloudy"));
-        cities.add(new City("Babruysk", "BY", 8, 13, 2, "Mostly Sunny"));
-        cities.add(new City("Gomel", "BY", 3, 7, -4, "Sunny"));
-        cities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Rain"));
-        cities.add(new City("Chicago", "USA", 17, 23, 15, "Partly Cloudy"));
-
-        adapter = new MyAdapter(this, cities);
+        adapter = new MyAdapter(this, offlineCities);
         viewPager.setAdapter(adapter);
+        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     public void loadInfo()
     {
-        netError.setVisibility(View.VISIBLE);
+        refresher.setRefreshing(true);
 
         if (NetworkDetector.isConnected(this)) {
-            cities.clear();
-
-            netError.setVisibility(View.INVISIBLE);
-
             renderWeatherData("Minsk");
             renderWeatherData("Babruysk");
             renderWeatherData("Gomel");
             renderWeatherData("Zhlobin");
             renderWeatherData("Chicago");
         }
-        else
-        {
-            loadCard();
+        else{
+            refresher.setRefreshing(false);
+            netError.setVisibility(View.VISIBLE);
         }
     }
 
@@ -126,10 +98,45 @@ public class MainActivity extends AppCompatActivity{
         @Override
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
-            City city = new City(weather);
-            cities.add(city);
-            adapter = new MyAdapter(MainActivity.this, cities);
-            viewPager.setAdapter(adapter);
+            try {
+                City city = new City(weather);
+                onlineCities.add(city);
+
+                adapter = new MyAdapter(MainActivity.this, onlineCities);
+                viewPager.setAdapter(adapter);
+                viewPager.getAdapter().notifyDataSetChanged();
+
+                netError.setVisibility(View.INVISIBLE);
+                refresher.setRefreshing(false);
+            }catch (Exception e)
+            {
+                refresher.setRefreshing(false);
+                netError.setVisibility(View.VISIBLE);
+
+//                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+//                    @Override
+//                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPageSelected(int position) {
+//
+//                    }
+//
+//                    @Override
+//                    public void onPageScrollStateChanged(int state) {
+//                        toggleRefreshing(state == ViewPager.SCROLL_STATE_IDLE);
+//                    }
+//
+//                    private void toggleRefreshing(boolean b) {
+//                        if(refresher != null)
+//                        {
+//                            refresher.setEnabled(b);
+//                        }
+//                    }
+//                });
+            }
         }
     }
 
