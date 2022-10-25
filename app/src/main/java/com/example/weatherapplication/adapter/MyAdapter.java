@@ -31,17 +31,15 @@ public class MyAdapter extends PagerAdapter {
         this.cities = cities;
 
         icons = new HashMap<>();
-        icons.put("Clear sky", R.drawable.fc);
-        icons.put("Few clouds", R.drawable.fc);
-        icons.put("Scattered clouds", R.drawable.sc);
-        icons.put("Broken clouds", R.drawable.bc);
-        icons.put("Shower rain", R.drawable.sr);
-        icons.put("Rain", R.drawable.r);
-        icons.put("Thunderstorm", R.drawable.thu);
-        icons.put("Snow", R.drawable.sn);
-        icons.put("Mist", R.drawable.m);
-        icons.put("Overcast clouds", R.drawable.bc);
-        icons.put("Light rain", R.drawable.r);
+        icons.put("01", R.drawable.cs);
+        icons.put("02", R.drawable.fc);
+        icons.put("03", R.drawable.sc);
+        icons.put("04", R.drawable.bc);
+        icons.put("50", R.drawable.m);
+        icons.put("13", R.drawable.sn);
+        icons.put("10", R.drawable.r);
+        icons.put("09", R.drawable.sr);
+        icons.put("11", R.drawable.thu);
     }
 
 
@@ -75,7 +73,8 @@ public class MyAdapter extends PagerAdapter {
         tempRange.setText(cities.get(position).getMaxDegrees() + "°C / " + cities.get(position).getMinDegrees() + "°C");
         status.setText(cities.get(position).getStatus());
         date.setText(DateFunctions.getDate());
-        icon.setImageResource(icons.get(cities.get(position).getStatus()));
+//        Toast.makeText(context, cities.get(position).getIcon().substring(0,2), Toast.LENGTH_SHORT).show();
+        icon.setImageResource(icons.get(cities.get(position).getIcon().substring(0,2)));
 
         container.addView(view, 0);
 

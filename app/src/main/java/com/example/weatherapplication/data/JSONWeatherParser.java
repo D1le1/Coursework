@@ -22,7 +22,7 @@ public class JSONWeatherParser {
 
             JSONArray jsonArray = object.getJSONArray("weather");
             JSONObject weatherObj = jsonArray.getJSONObject(0);
-            Weather weather = new Weather(place, Utils.getString("description", weatherObj), temperature);
+            Weather weather = new Weather(place, Utils.getString("description", weatherObj), temperature, Utils.getString("icon", weatherObj));
 
             return weather;
 

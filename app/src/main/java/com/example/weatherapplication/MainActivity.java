@@ -65,11 +65,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void loadCard() {
-        offlineCities.add(new City("Minsk", "BY", 10, 10, -1, "Overcast clouds"));
-        offlineCities.add(new City("Babruysk", "BY", 8, 13, 2, "Clear sky"));
-        offlineCities.add(new City("Gomel", "BY", 3, 7, -4, "Rain"));
-        offlineCities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Mist"));
-        offlineCities.add(new City("Chicago", "USA", 17, 23, 15, "Thunderstorm"));
+        offlineCities.add(new City("Minsk", "BY", 10, 10, -1, "Overcast clouds", "04d"));
+        offlineCities.add(new City("Babruysk", "BY", 8, 13, 2, "Clear sky", "01d"));
+        offlineCities.add(new City("Gomel", "BY", 3, 7, -4, "Rain", "10d"));
+        offlineCities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Mist", "50d"));
+        offlineCities.add(new City("Chicago", "USA", 17, 23, 15, "Thunderstorm", "11d"));
 
         adapter = new MyAdapter(this, offlineCities);
         viewPager.setAdapter(adapter);
@@ -159,10 +159,6 @@ public class MainActivity extends AppCompatActivity{
 
     public static String formatStatus(String status)
     {
-        String[] temp = status.split(" ");
-        if (temp.length > 1)
-            return temp[0].substring(0,1).toUpperCase(Locale.ROOT) + temp[0].substring(1) + " " + temp[1];
-        else
-            return temp[0].substring(0,1).toUpperCase(Locale.ROOT);
+        return status.substring(0, 1).toUpperCase(Locale.ROOT) + status.substring(1);
     }
 }

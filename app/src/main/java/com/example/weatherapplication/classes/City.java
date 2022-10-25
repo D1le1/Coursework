@@ -10,14 +10,16 @@ public class City {
     private int maxDegrees;
     private int minDegrees;
     private String status;
+    private String icon;
 
-    public City(String name, String country, int degrees, int maxDegrees, int minDegrees, String status) {
+    public City(String name, String country, int degrees, int maxDegrees, int minDegrees, String status, String icon) {
         this.name = name;
         this.country = country;
         this.degrees = degrees;
         this.maxDegrees = maxDegrees;
         this.minDegrees = minDegrees;
         this.status = status;
+        this.icon = icon;
     }
 
     public City(Weather weather) {
@@ -27,6 +29,7 @@ public class City {
         this.minDegrees = (int) Math.ceil(weather.getTemperature().getMinTemp());
         this.maxDegrees = (int) Math.ceil(weather.getTemperature().getMaxTemp());
         this.status = MainActivity.formatStatus(weather.getStatus());
+        this.icon = weather.getIcon();
     }
 
     public String getName() {
@@ -51,6 +54,10 @@ public class City {
 
     public String getStatus() {
         return status;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 
     @Override

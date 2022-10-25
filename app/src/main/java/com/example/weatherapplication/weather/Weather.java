@@ -4,11 +4,13 @@ public class Weather {
     private Place place;
     private String status;
     private Temperature temperature;
+    private String icon;
 
-    public Weather(Place place, String status, Temperature temperature) {
+    public Weather(Place place, String status, Temperature temperature, String icon) {
         this.place = place;
         this.status = status;
         this.temperature = temperature;
+        this.icon = icon;
     }
 
     public Place getPlace() {
@@ -21,5 +23,9 @@ public class Weather {
 
     public Temperature getTemperature() {
         return temperature;
+    }
+
+    public String getIcon() {
+        return icon;
     }
 }
