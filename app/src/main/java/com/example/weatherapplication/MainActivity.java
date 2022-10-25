@@ -1,6 +1,7 @@
 package com.example.weatherapplication;
 
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
@@ -53,6 +54,7 @@ public class MainActivity extends AppCompatActivity{
             @Override
             public void onClick(View view) {
                 view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
+                startActivity(new Intent(MainActivity.this, ManageActivity.class));
             }
         });
 
@@ -65,11 +67,11 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void loadCard() {
-        offlineCities.add(new City("Minsk", "BY", 10, 10, -1, "Overcast clouds", "04d"));
-        offlineCities.add(new City("Babruysk", "BY", 8, 13, 2, "Clear sky", "01d"));
-        offlineCities.add(new City("Gomel", "BY", 3, 7, -4, "Rain", "10d"));
-        offlineCities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Mist", "50d"));
-        offlineCities.add(new City("Chicago", "USA", 17, 23, 15, "Thunderstorm", "11d"));
+        offlineCities.add(new City("Minsk", "BY", 10, 10, -1, "Overcast clouds", "04"));
+        offlineCities.add(new City("Babruysk", "BY", 8, 13, 2, "Clear sky", "01"));
+        offlineCities.add(new City("Gomel", "BY", 3, 7, -4, "Rain", "10"));
+        offlineCities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Mist", "50"));
+        offlineCities.add(new City("Chicago", "USA", 17, 23, 15, "Thunderstorm", "11"));
 
         adapter = new MyAdapter(this, offlineCities);
         viewPager.setAdapter(adapter);
