@@ -26,12 +26,9 @@ public class ManageActivity extends AppCompatActivity {
         setContentView(R.layout.manage_activity);
 
         back = findViewById(R.id.back);
-        back.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.startAnimation(AnimationUtils.loadAnimation(ManageActivity.this, R.anim.click_anim));
-                startActivity(new Intent(ManageActivity.this, MainActivity.class));
-            }
+        back.setOnClickListener(view -> {
+            view.startAnimation(AnimationUtils.loadAnimation(ManageActivity.this, R.anim.click_anim));
+            ManageActivity.this.finish();
         });
 
         recycler = findViewById(R.id.recycler);

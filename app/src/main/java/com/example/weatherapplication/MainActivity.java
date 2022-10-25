@@ -50,12 +50,9 @@ public class MainActivity extends AppCompatActivity{
         netError = findViewById(R.id.net_error);
         city = findViewById(R.id.cities);
 
-        city.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
-                startActivity(new Intent(MainActivity.this, ManageActivity.class));
-            }
+        city.setOnClickListener(view -> {
+            view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
+            startActivity(new Intent(MainActivity.this, ManageActivity.class));
         });
 
         loadCard();
