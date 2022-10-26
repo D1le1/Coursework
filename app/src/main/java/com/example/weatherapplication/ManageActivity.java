@@ -39,7 +39,6 @@ public class ManageActivity extends AppCompatActivity {
     {
         ArrayList<City> cities = (ArrayList<City>) getIntent().getSerializableExtra("cities");
 
-
         RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(this, LinearLayoutManager.VERTICAL, false);
         recycler.setLayoutManager(layoutManager);
 

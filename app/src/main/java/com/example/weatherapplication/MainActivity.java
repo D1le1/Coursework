@@ -2,15 +2,12 @@ package com.example.weatherapplication;
 
 import android.annotation.SuppressLint;
 import android.content.Intent;
-import android.graphics.drawable.Drawable;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.view.Gravity;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
@@ -26,13 +23,17 @@ import com.example.weatherapplication.weather.Weather;
 
 import org.json.JSONException;
 
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
-    private ArrayList<City> offlineCities;
-    private ArrayList<City> onlineCities;
+    private ArrayList<City> cities;
     private ViewPager viewPager;
     private MyAdapter adapter;
     private TextView netError;
@@ -47,51 +48,37 @@ public class MainActivity extends AppCompatActivity{
 
         viewPager = findViewById(R.id.pager);
         viewPager.setPageTransformer(false, new FadeName());
-        offlineCities = new ArrayList<>();
-        onlineCities = new ArrayList<>();
+        cities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
         netError = findViewById(R.id.net_error);
         city = findViewById(R.id.cities);
 
-        loadCard();
-        loadInfo();
+        try{
+            loadData();
+        }catch (Exception e) {
+        }
+        updateData();
 
         city.setOnClickListener(view -> {
             view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
 
             Intent intent = new Intent(MainActivity.this, ManageActivity.class);
-            if (onlineCities.isEmpty()) {
-                intent.putExtra("cities", (Serializable) offlineCities);
-            }
-            else
-                intent.putExtra("cities", (Serializable) onlineCities);
+            intent.putExtra("cities", (Serializable) cities);
 
             startActivity(intent);
         });
 
         refresher.setOnRefreshListener(() -> {
-            loadInfo();
+            updateData();
         });
     }
 
-    private void loadCard() {
-        offlineCities.add(new City("Minsk", "BY", 10, 10, -1, "Overcast clouds", "04"));
-        offlineCities.add(new City("Babruysk", "BY", 8, 13, 2, "Clear sky", "01"));
-        offlineCities.add(new City("Gomel", "BY", 3, 7, -4, "Rain", "10"));
-        offlineCities.add(new City("Washington D.C.", "USA", 15, 19, 10, "Mist", "50"));
-        offlineCities.add(new City("Chicago", "USA", 17, 23, 15, "Thunderstorm", "11"));
-
-        adapter = new MyAdapter(this, offlineCities);
-        viewPager.setAdapter(adapter);
-        viewPager.getAdapter().notifyDataSetChanged();
-    }
-
-    public void loadInfo()
+    public void updateData()
     {
         refresher.setRefreshing(true);
 
         if (NetworkDetector.isConnected(this)) {
-            onlineCities.clear();
+            cities.clear();
             renderWeatherData("Minsk");
             renderWeatherData("Babruysk");
             renderWeatherData("Gomel");
@@ -102,6 +89,31 @@ public class MainActivity extends AppCompatActivity{
             refresher.setRefreshing(false);
             netError.setVisibility(View.VISIBLE);
         }
+    }
+
+    private void saveData() throws IOException {
+        FileOutputStream file = openFileOutput("data", MODE_PRIVATE);
+        ObjectOutputStream object = new ObjectOutputStream(file);
+
+        object.writeObject(cities);
+
+        object.close();
+        file.close();
+    }
+
+    private void loadData() throws IOException, ClassNotFoundException {
+        FileInputStream file = openFileInput("data");
+        ObjectInputStream object = new ObjectInputStream(file);
+
+
+        cities = (ArrayList<City>) object.readObject();
+
+        object.close();
+        file.close();
+
+        adapter = new MyAdapter(this, cities);
+        viewPager.setAdapter(adapter);
+        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     public void renderWeatherData(String city)
@@ -127,14 +139,17 @@ public class MainActivity extends AppCompatActivity{
             super.onPostExecute(weather);
             try {
                 City city = new City(weather);
-                onlineCities.add(city);
+                cities.add(city);
 
-                adapter = new MyAdapter(MainActivity.this, onlineCities);
+                adapter = new MyAdapter(MainActivity.this, cities);
                 viewPager.setAdapter(adapter);
                 viewPager.getAdapter().notifyDataSetChanged();
 
                 netError.setVisibility(View.INVISIBLE);
                 refresher.setRefreshing(false);
+                try {
+                    saveData();
+                } catch (Exception e){}
             }catch (Exception e)
             {
                 refresher.setRefreshing(false);
