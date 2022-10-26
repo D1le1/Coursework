@@ -45,11 +45,7 @@ public class ManageActivity extends AppCompatActivity {
         back.setOnClickListener(view -> {
             view.startAnimation(AnimationUtils.loadAnimation(ManageActivity.this, R.anim.click_anim));
 
-            Intent intent = new Intent();
-            intent.putExtra("cities", (Serializable) cities);
-            setResult(RESULT_OK, intent);
-
-            ManageActivity.this.finish();
+            onBackPressed();
         });
 
         recycler = findViewById(R.id.recycler);
@@ -66,6 +62,17 @@ public class ManageActivity extends AppCompatActivity {
             }
         });
     }
+
+    @Override
+    public void onBackPressed() {
+
+        Intent intent = new Intent();
+        intent.putExtra("cities", (Serializable) cities);
+        setResult(RESULT_OK, intent);
+
+        super.onBackPressed();
+    }
+
 
     public void setRecycler()
     {
