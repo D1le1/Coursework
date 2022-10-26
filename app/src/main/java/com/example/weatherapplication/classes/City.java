@@ -3,7 +3,9 @@ package com.example.weatherapplication.classes;
 import com.example.weatherapplication.MainActivity;
 import com.example.weatherapplication.weather.Weather;
 
-public class City {
+import java.io.Serializable;
+
+public class City implements Serializable {
     private String name;
     private String country;
     private int degrees;

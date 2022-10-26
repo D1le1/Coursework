@@ -25,6 +25,7 @@ import com.example.weatherapplication.weather.Weather;
 
 import org.json.JSONException;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Locale;
 
@@ -50,13 +51,21 @@ public class MainActivity extends AppCompatActivity{
         netError = findViewById(R.id.net_error);
         city = findViewById(R.id.cities);
 
-        city.setOnClickListener(view -> {
-            view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
-            startActivity(new Intent(MainActivity.this, ManageActivity.class));
-        });
-
         loadCard();
         loadInfo();
+
+        city.setOnClickListener(view -> {
+            view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
+
+            Intent intent = new Intent(MainActivity.this, ManageActivity.class);
+            if (onlineCities.isEmpty()) {
+                intent.putExtra("cities", (Serializable) offlineCities);
+            }
+            else
+                intent.putExtra("cities", (Serializable) onlineCities);
+
+            startActivity(intent);
+        });
 
         refresher.setOnRefreshListener(() -> {
             loadInfo();
