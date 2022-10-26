@@ -21,6 +21,7 @@ import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.data.JSONWeatherParser;
 import com.example.weatherapplication.data.WeatherHttpClient;
 import com.example.weatherapplication.functionality.NetworkDetector;
+import com.example.weatherapplication.util.FadeName;
 import com.example.weatherapplication.weather.Weather;
 
 import org.json.JSONException;
@@ -45,6 +46,7 @@ public class MainActivity extends AppCompatActivity{
         setContentView(R.layout.activity_main);
 
         viewPager = findViewById(R.id.pager);
+        viewPager.setPageTransformer(false, new FadeName());
         offlineCities = new ArrayList<>();
         onlineCities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
