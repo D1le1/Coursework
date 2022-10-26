@@ -8,7 +8,9 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
+import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -20,6 +22,7 @@ import com.example.weatherapplication.data.WeatherHttpClient;
 import com.example.weatherapplication.functionality.NetworkDetector;
 import com.example.weatherapplication.util.FadeName;
 import com.example.weatherapplication.weather.Weather;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 
@@ -73,7 +76,7 @@ public class MainActivity extends AppCompatActivity{
                 intent.putExtra("cities", (Serializable) onlineCities);
             }
 
-            startActivity(intent);
+            startActivityForResult(intent, 100);
         });
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
@@ -148,6 +151,35 @@ public class MainActivity extends AppCompatActivity{
     {
         WeatherTask weatherTask = new WeatherTask();
         weatherTask.execute(new String[]{city + "&units=metric"});
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        ArrayList<City> cities = (ArrayList<City>) data.getSerializableExtra("cities");
+        if (onlineCities.isEmpty())
+        {
+            offlineCities.clear();
+            offlineCities.addAll(cities);
+
+            adapter = new MyAdapter(MainActivity.this, offlineCities);
+            viewPager.setAdapter(adapter);
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+        else
+        {
+            onlineCities.clear();
+            onlineCities.addAll(cities);
+
+            adapter = new MyAdapter(MainActivity.this, onlineCities);
+            viewPager.setAdapter(adapter);
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
+
+        try {
+            saveData();
+        }catch (Exception e){}
     }
 
     private class WeatherTask extends AsyncTask<String, Void, Weather>

@@ -73,7 +73,6 @@ public class MyAdapter extends PagerAdapter {
         tempRange.setText(cities.get(position).getMaxDegrees() + "°C / " + cities.get(position).getMinDegrees() + "°C");
         status.setText(cities.get(position).getStatus());
         date.setText(DateFunctions.getDate());
-//        Toast.makeText(context, cities.get(position).getIcon().substring(0,2), Toast.LENGTH_SHORT).show();
         icon.setImageResource(icons.get(cities.get(position).getIcon().substring(0,2)));
 
         container.addView(view, 0);
