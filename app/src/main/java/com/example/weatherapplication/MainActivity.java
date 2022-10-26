@@ -104,7 +104,6 @@ public class MainActivity extends AppCompatActivity{
     public void updateData()
     {
         refresher.setRefreshing(true);
-        viewPager.beginFakeDrag();
 
         if (NetworkDetector.isConnected(this)) {
             onlineCities.clear();
@@ -116,7 +115,6 @@ public class MainActivity extends AppCompatActivity{
         }
         else{
             refresher.setRefreshing(false);
-            viewPager.endFakeDrag();
             netError.setVisibility(View.VISIBLE);
         }
     }
