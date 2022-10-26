@@ -33,7 +33,8 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
-    private ArrayList<City> cities;
+    private ArrayList<City> onlineCities;
+    private ArrayList<City> offlineCities;
     private ViewPager viewPager;
     private MyAdapter adapter;
     private TextView netError;
@@ -48,7 +49,8 @@ public class MainActivity extends AppCompatActivity{
 
         viewPager = findViewById(R.id.pager);
         viewPager.setPageTransformer(false, new FadeName());
-        cities = new ArrayList<>();
+        onlineCities = new ArrayList<>();
+        offlineCities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
         netError = findViewById(R.id.net_error);
         city = findViewById(R.id.cities);
@@ -63,9 +65,35 @@ public class MainActivity extends AppCompatActivity{
             view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
 
             Intent intent = new Intent(MainActivity.this, ManageActivity.class);
-            intent.putExtra("cities", (Serializable) cities);
+            if (onlineCities.isEmpty()) {
+                intent.putExtra("cities", (Serializable) offlineCities);
+            }
+            else
+            {
+                intent.putExtra("cities", (Serializable) onlineCities);
+            }
 
             startActivity(intent);
+        });
+
+        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
+            @Override
+            public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+            }
+
+            @Override
+            public void onPageSelected(int position) {
+
+            }
+
+            @Override
+            public void onPageScrollStateChanged(int state) {
+                if(refresher != null && !refresher.isRefreshing())
+                {
+                    refresher.setEnabled(state == ViewPager.SCROLL_STATE_IDLE);
+                }
+            }
         });
 
         refresher.setOnRefreshListener(() -> {
@@ -76,9 +104,10 @@ public class MainActivity extends AppCompatActivity{
     public void updateData()
     {
         refresher.setRefreshing(true);
+        viewPager.beginFakeDrag();
 
         if (NetworkDetector.isConnected(this)) {
-            cities.clear();
+            onlineCities.clear();
             renderWeatherData("Minsk");
             renderWeatherData("Babruysk");
             renderWeatherData("Gomel");
@@ -87,6 +116,7 @@ public class MainActivity extends AppCompatActivity{
         }
         else{
             refresher.setRefreshing(false);
+            viewPager.endFakeDrag();
             netError.setVisibility(View.VISIBLE);
         }
     }
@@ -95,7 +125,7 @@ public class MainActivity extends AppCompatActivity{
         FileOutputStream file = openFileOutput("data", MODE_PRIVATE);
         ObjectOutputStream object = new ObjectOutputStream(file);
 
-        object.writeObject(cities);
+        object.writeObject(onlineCities);
 
         object.close();
         file.close();
@@ -106,12 +136,12 @@ public class MainActivity extends AppCompatActivity{
         ObjectInputStream object = new ObjectInputStream(file);
 
 
-        cities = (ArrayList<City>) object.readObject();
+        offlineCities = (ArrayList<City>) object.readObject();
 
         object.close();
         file.close();
 
-        adapter = new MyAdapter(this, cities);
+        adapter = new MyAdapter(this, offlineCities);
         viewPager.setAdapter(adapter);
         viewPager.getAdapter().notifyDataSetChanged();
     }
@@ -139,45 +169,22 @@ public class MainActivity extends AppCompatActivity{
             super.onPostExecute(weather);
             try {
                 City city = new City(weather);
-                cities.add(city);
+                onlineCities.add(city);
 
-                adapter = new MyAdapter(MainActivity.this, cities);
+                adapter = new MyAdapter(MainActivity.this, onlineCities);
                 viewPager.setAdapter(adapter);
                 viewPager.getAdapter().notifyDataSetChanged();
 
                 netError.setVisibility(View.INVISIBLE);
-                refresher.setRefreshing(false);
                 try {
                     saveData();
                 } catch (Exception e){}
             }catch (Exception e)
             {
-                refresher.setRefreshing(false);
                 netError.setVisibility(View.VISIBLE);
 
-//                viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
-//                    @Override
-//                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPageSelected(int position) {
-//
-//                    }
-//
-//                    @Override
-//                    public void onPageScrollStateChanged(int state) {
-//                        toggleRefreshing(state == ViewPager.SCROLL_STATE_IDLE);
-//                    }
-//
-//                    private void toggleRefreshing(boolean b) {
-//                        if(refresher != null)
-//                        {
-//                            refresher.setEnabled(b);
-//                        }
-//                    }
-//                });
+            }finally {
+                refresher.setRefreshing(false);
             }
         }
     }
