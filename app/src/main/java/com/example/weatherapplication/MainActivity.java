@@ -8,7 +8,6 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
@@ -22,7 +21,6 @@ import com.example.weatherapplication.data.WeatherHttpClient;
 import com.example.weatherapplication.functionality.NetworkDetector;
 import com.example.weatherapplication.util.FadeName;
 import com.example.weatherapplication.weather.Weather;
-import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 
@@ -60,8 +58,7 @@ public class MainActivity extends AppCompatActivity{
 
         try{
             loadData();
-        }catch (Exception e) {
-        }
+        }catch (Exception e) {}
         updateData();
 
         city.setOnClickListener(view -> {
@@ -99,9 +96,29 @@ public class MainActivity extends AppCompatActivity{
             }
         });
 
-        refresher.setOnRefreshListener(() -> {
-            updateData();
-        });
+        refresher.setOnRefreshListener(this::updateData);
+    }
+
+    @Override
+    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+
+        if(resultCode == RESULT_OK) {
+            ArrayList<City> cities = (ArrayList<City>) data.getSerializableExtra("cities");
+            if (onlineCities.isEmpty()) {
+                offlineCities.clear();
+                offlineCities.addAll(cities);
+
+                adapter = new MyAdapter(MainActivity.this, offlineCities);
+            } else {
+                onlineCities.clear();
+                onlineCities.addAll(cities);
+
+                adapter = new MyAdapter(MainActivity.this, onlineCities);
+            }
+            viewPager.setAdapter(adapter);
+            viewPager.getAdapter().notifyDataSetChanged();
+        }
     }
 
     public void updateData()
@@ -110,11 +127,12 @@ public class MainActivity extends AppCompatActivity{
 
         if (NetworkDetector.isConnected(this)) {
             onlineCities.clear();
-            renderWeatherData("Minsk");
-            renderWeatherData("Babruysk");
-            renderWeatherData("Gomel");
-            renderWeatherData("Zhlobin");
-            renderWeatherData("Chicago");
+            onlineCities.;
+//            renderWeatherData("Minsk");
+//            renderWeatherData("Babruysk");
+//            renderWeatherData("Gomel");
+//            renderWeatherData("Zhlobin");
+//            renderWeatherData("Chicago");
         }
         else{
             refresher.setRefreshing(false);
@@ -151,35 +169,6 @@ public class MainActivity extends AppCompatActivity{
     {
         WeatherTask weatherTask = new WeatherTask();
         weatherTask.execute(new String[]{city + "&units=metric"});
-    }
-
-    @Override
-    protected void onActivityResult(int requestCode, int resultCode, @Nullable Intent data) {
-        super.onActivityResult(requestCode, resultCode, data);
-
-        ArrayList<City> cities = (ArrayList<City>) data.getSerializableExtra("cities");
-        if (onlineCities.isEmpty())
-        {
-            offlineCities.clear();
-            offlineCities.addAll(cities);
-
-            adapter = new MyAdapter(MainActivity.this, offlineCities);
-            viewPager.setAdapter(adapter);
-            viewPager.getAdapter().notifyDataSetChanged();
-        }
-        else
-        {
-            onlineCities.clear();
-            onlineCities.addAll(cities);
-
-            adapter = new MyAdapter(MainActivity.this, onlineCities);
-            viewPager.setAdapter(adapter);
-            viewPager.getAdapter().notifyDataSetChanged();
-        }
-
-        try {
-            saveData();
-        }catch (Exception e){}
     }
 
     private class WeatherTask extends AsyncTask<String, Void, Weather>

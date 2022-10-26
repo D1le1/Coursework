@@ -1,20 +1,28 @@
 package com.example.weatherapplication;
 
 import android.content.Intent;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
+import com.example.weatherapplication.adapter.MyAdapter;
 import com.example.weatherapplication.adapter.RecyclerAdapter;
 import com.example.weatherapplication.classes.City;
+import com.example.weatherapplication.data.JSONWeatherParser;
+import com.example.weatherapplication.data.WeatherHttpClient;
+import com.example.weatherapplication.weather.Weather;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import org.json.JSONException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
@@ -50,10 +58,12 @@ public class ManageActivity extends AppCompatActivity {
         add = findViewById(R.id.add);
         add.setOnClickListener((View view) -> {
             et = findViewById(R.id.et);
-
-            cities.add(new City(et.getText().toString(), "BY", 10, 10, 5, "Sunny", "01"));
-
-            setRecycler();
+            if (containsCity(cities, et.getText().toString()))
+            {
+                Toast.makeText(ManageActivity.this, "This city is already on the list", Toast.LENGTH_SHORT).show();
+            }else {
+                renderWeatherData(et.getText().toString());
+            }
         });
     }
 
@@ -64,5 +74,51 @@ public class ManageActivity extends AppCompatActivity {
 
         RecyclerAdapter adapter = new RecyclerAdapter(this, cities);
         recycler.setAdapter(adapter);
+    }
+
+    public void renderWeatherData(String city)
+    {
+        WeatherTask weatherTask = new WeatherTask();
+        weatherTask.execute(new String[]{city + "&units=metric"});
+    }
+
+    private class WeatherTask extends AsyncTask<String, Void, Weather>
+    {
+        @Override
+        protected Weather doInBackground(String... params) {
+            String data = new WeatherHttpClient().getWeatherData(params[0]);
+            try {
+                return JSONWeatherParser.getWeather(data);
+            } catch (JSONException e) {}
+
+            return null;
+        }
+
+        @Override
+        protected void onPostExecute(Weather weather) {
+            super.onPostExecute(weather);
+
+            cities = (ArrayList<City>) getIntent().getSerializableExtra("cities");
+
+            try {
+                City city = new City(weather);
+                cities.add(city);
+                setRecycler();
+            }catch (Exception e){
+                Toast.makeText(ManageActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
+            }
+        }
+    }
+
+    private boolean containsCity(ArrayList<City> cities, String city)
+    {
+        for (City c : cities)
+        {
+            if (c.getName().equals(city))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 }
