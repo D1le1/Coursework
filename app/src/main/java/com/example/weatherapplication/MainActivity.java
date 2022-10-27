@@ -1,6 +1,7 @@
 package com.example.weatherapplication;
 
 import android.annotation.SuppressLint;
+import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
@@ -9,6 +10,7 @@ import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -36,7 +38,6 @@ import java.util.ArrayList;
 import java.util.Locale;
 
 public class MainActivity extends AppCompatActivity{
-    private ArrayList<City> onlineCities;
     private ArrayList<City> offlineCities;
     private ViewPager viewPager;
     private MyAdapter adapter;
@@ -52,7 +53,6 @@ public class MainActivity extends AppCompatActivity{
 
         viewPager = findViewById(R.id.pager);
         viewPager.setPageTransformer(false, new FadeName());
-        onlineCities = new ArrayList<>();
         offlineCities = new ArrayList<>();
         refresher = findViewById(R.id.refresher);
         netError = findViewById(R.id.net_error);
@@ -67,13 +67,7 @@ public class MainActivity extends AppCompatActivity{
             view.startAnimation(AnimationUtils.loadAnimation(MainActivity.this, R.anim.click_anim));
 
             Intent intent = new Intent(MainActivity.this, ManageActivity.class);
-            if (onlineCities.isEmpty()) {
-                intent.putExtra("cities", (Serializable) offlineCities);
-            }
-            else
-            {
-                intent.putExtra("cities", (Serializable) onlineCities);
-            }
+            intent.putExtra("cities", (Serializable) offlineCities);
 
             startActivityForResult(intent, 100);
         });
@@ -107,18 +101,10 @@ public class MainActivity extends AppCompatActivity{
 
         if(resultCode == RESULT_OK) {
             ArrayList<City> cities = (ArrayList<City>) data.getSerializableExtra("cities");
-            if (onlineCities.isEmpty()) {
-                offlineCities.clear();
-                offlineCities.addAll(cities);
 
-                adapter = new MyAdapter(MainActivity.this, offlineCities);
-            } else {
-                onlineCities.clear();
-                onlineCities.addAll(cities);
+            offlineCities.clear();
+            offlineCities.addAll(cities);
 
-                adapter = new MyAdapter(MainActivity.this, onlineCities);
-            }
-            viewPager.setAdapter(adapter);
             viewPager.getAdapter().notifyDataSetChanged();
         }
     }
@@ -210,9 +196,9 @@ public class MainActivity extends AppCompatActivity{
 //        offlineCities.clear();
         viewPager.getAdapter().notifyDataSetChanged();
 
-                        try {
-                    saveData();
-                } catch (Exception e){}
+        try {
+            saveData();
+        } catch (Exception e){}
     }
 
     public static String formatStatus(String status)

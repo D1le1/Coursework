@@ -105,12 +105,10 @@ public class ManageActivity extends AppCompatActivity {
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
 
-            cities = (ArrayList<City>) getIntent().getSerializableExtra("cities");
-
             try {
                 City city = new City(weather);
                 cities.add(city);
-                setRecycler();
+                recycler.getAdapter().notifyDataSetChanged();
             }catch (Exception e){
                 Toast.makeText(ManageActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
             }
