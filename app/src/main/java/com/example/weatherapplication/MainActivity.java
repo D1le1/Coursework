@@ -114,16 +114,19 @@ public class MainActivity extends AppCompatActivity{
         refresher.setRefreshing(true);
 
         if (NetworkDetector.isConnected(this)) {
-            renderWeatherData("Minsk");
-            renderWeatherData("Babruysk");
-            renderWeatherData("Gomel");
-            renderWeatherData("Zhlobin");
-            renderWeatherData("Chicago");
-            renderWeatherData("New York");
+            if (!offlineCities.isEmpty()) {
+                for (City city : offlineCities) {
+                    renderWeatherData(city.getName());
+                }
+            }
+            else
+            {
+                refresher.setRefreshing(false);
+            }
         }
         else{
             refresher.setRefreshing(false);
-            netError.setVisibility(View.VISIBLE);
+            netError.animate().setDuration(500).alpha(1);
         }
     }
 
@@ -177,10 +180,10 @@ public class MainActivity extends AppCompatActivity{
             try {
                 getPostData(weather);
 
-                netError.setVisibility(View.INVISIBLE);
+                netError.animate().setDuration(500).alpha(0);
             }catch (Exception e)
             {
-                netError.setVisibility(View.VISIBLE);
+                netError.animate().setDuration(500).alpha(1);
 
             }finally {
                 refresher.setRefreshing(false);

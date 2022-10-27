@@ -9,8 +9,10 @@ import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
+import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
@@ -26,6 +28,7 @@ import org.json.JSONException;
 
 import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Collections;
 
 public class ManageActivity extends AppCompatActivity {
     private RecyclerView recycler;
@@ -33,6 +36,7 @@ public class ManageActivity extends AppCompatActivity {
     private FloatingActionButton add;
     private ArrayList<City> cities;
     private EditText et;
+    private ItemTouchHelper helper;
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -50,6 +54,7 @@ public class ManageActivity extends AppCompatActivity {
 
         recycler = findViewById(R.id.recycler);
         setRecycler();
+        setHelper();
 
         add = findViewById(R.id.add);
         add.setOnClickListener((View view) -> {
@@ -73,6 +78,29 @@ public class ManageActivity extends AppCompatActivity {
         super.onBackPressed();
     }
 
+    public void setHelper()
+    {
+        helper = new ItemTouchHelper(new ItemTouchHelper.SimpleCallback(ItemTouchHelper.UP | ItemTouchHelper.DOWN, ItemTouchHelper.START | ItemTouchHelper.END) {
+            @Override
+            public boolean onMove(@NonNull RecyclerView recyclerView, @NonNull RecyclerView.ViewHolder drag, @NonNull RecyclerView.ViewHolder drop) {
+                int dragPosition = drag.getAdapterPosition();
+                int dropPosition = drop.getAdapterPosition();
+
+                Collections.swap(cities, dragPosition, dropPosition);
+
+                recycler.getAdapter().notifyItemMoved(dragPosition, dropPosition);
+
+                return false;
+            }
+
+            @Override
+            public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                cities.remove(viewHolder.getAdapterPosition());
+                recycler.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+            }
+        });
+        helper.attachToRecyclerView(recycler);
+    }
 
     public void setRecycler()
     {
@@ -108,7 +136,7 @@ public class ManageActivity extends AppCompatActivity {
             try {
                 City city = new City(weather);
                 cities.add(city);
-                recycler.getAdapter().notifyDataSetChanged();
+                recycler.getAdapter().notifyItemInserted(cities.size() - 1);
             }catch (Exception e){
                 Toast.makeText(ManageActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
             }
