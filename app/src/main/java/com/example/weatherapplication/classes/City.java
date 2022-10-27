@@ -62,6 +62,17 @@ public class City implements Serializable {
         return icon;
     }
 
+    public void setData(Weather weather)
+    {
+        this.name = weather.getPlace().getCity();
+        this.country = weather.getPlace().getCountry();
+        this.degrees = (int) Math.ceil(weather.getTemperature().getCurrantTemperature());
+        this.minDegrees = (int) Math.ceil(weather.getTemperature().getMinTemp());
+        this.maxDegrees = (int) Math.ceil(weather.getTemperature().getMaxTemp());
+        this.status = MainActivity.formatStatus(weather.getStatus());
+        this.icon = weather.getIcon();
+    }
+
     @Override
     public String toString() {
         return name + ", " + country;

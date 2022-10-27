@@ -3,6 +3,7 @@ package com.example.weatherapplication;
 import android.annotation.SuppressLint;
 import android.content.Intent;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.view.View;
 import android.view.animation.AnimationUtils;
@@ -10,6 +11,7 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import androidx.annotation.Nullable;
+import androidx.annotation.RequiresApi;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
@@ -126,13 +128,12 @@ public class MainActivity extends AppCompatActivity{
         refresher.setRefreshing(true);
 
         if (NetworkDetector.isConnected(this)) {
-            onlineCities.clear();
-            onlineCities.;
-//            renderWeatherData("Minsk");
-//            renderWeatherData("Babruysk");
-//            renderWeatherData("Gomel");
-//            renderWeatherData("Zhlobin");
-//            renderWeatherData("Chicago");
+            renderWeatherData("Minsk");
+            renderWeatherData("Babruysk");
+            renderWeatherData("Gomel");
+            renderWeatherData("Zhlobin");
+            renderWeatherData("Chicago");
+            renderWeatherData("New York");
         }
         else{
             refresher.setRefreshing(false);
@@ -144,7 +145,7 @@ public class MainActivity extends AppCompatActivity{
         FileOutputStream file = openFileOutput("data", MODE_PRIVATE);
         ObjectOutputStream object = new ObjectOutputStream(file);
 
-        object.writeObject(onlineCities);
+        object.writeObject(offlineCities);
 
         object.close();
         file.close();
@@ -183,21 +184,14 @@ public class MainActivity extends AppCompatActivity{
             return null;
         }
 
+        @RequiresApi(api = Build.VERSION_CODES.N)
         @Override
         protected void onPostExecute(Weather weather) {
             super.onPostExecute(weather);
             try {
-                City city = new City(weather);
-                onlineCities.add(city);
-
-                adapter = new MyAdapter(MainActivity.this, onlineCities);
-                viewPager.setAdapter(adapter);
-                viewPager.getAdapter().notifyDataSetChanged();
+                getPostData(weather);
 
                 netError.setVisibility(View.INVISIBLE);
-                try {
-                    saveData();
-                } catch (Exception e){}
             }catch (Exception e)
             {
                 netError.setVisibility(View.VISIBLE);
@@ -206,6 +200,19 @@ public class MainActivity extends AppCompatActivity{
                 refresher.setRefreshing(false);
             }
         }
+    }
+
+    @RequiresApi(api = Build.VERSION_CODES.N)
+    public void getPostData(Weather weather)
+    {
+        offlineCities.stream().filter(x -> x.getName().equals(weather.getPlace().getCity())).forEach(x -> x.setData(weather));
+//        offlineCities.add(new City(weather));
+//        offlineCities.clear();
+        viewPager.getAdapter().notifyDataSetChanged();
+
+                        try {
+                    saveData();
+                } catch (Exception e){}
     }
 
     public static String formatStatus(String status)
