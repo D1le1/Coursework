@@ -40,7 +40,6 @@ import java.util.Locale;
 public class MainActivity extends AppCompatActivity{
     private ArrayList<City> offlineCities;
     private ViewPager viewPager;
-    private MyAdapter adapter;
     private TextView netError;
     private SwipeRefreshLayout refresher;
     private ImageView city;
@@ -71,6 +70,8 @@ public class MainActivity extends AppCompatActivity{
 
             startActivityForResult(intent, 100);
         });
+
+        viewPager.setAdapter(new MyAdapter(this, offlineCities));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -150,8 +151,6 @@ public class MainActivity extends AppCompatActivity{
         object.close();
         file.close();
 
-        adapter = new MyAdapter(this, offlineCities);
-        viewPager.setAdapter(adapter);
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
