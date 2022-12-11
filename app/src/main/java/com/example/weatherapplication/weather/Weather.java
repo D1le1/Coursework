@@ -4,9 +4,9 @@ public class Weather {
     private Place place;
     private String status;
     private Temperature temperature;
-    private String icon;
+    private int icon;
 
-    public Weather(Place place, String status, Temperature temperature, String icon) {
+    public Weather(Place place, String status, Temperature temperature, int icon) {
         this.place = place;
         this.status = status;
         this.temperature = temperature;
@@ -25,7 +25,7 @@ public class Weather {
         return temperature;
     }
 
-    public String getIcon() {
+    public int getIcon() {
         return icon;
     }
 }

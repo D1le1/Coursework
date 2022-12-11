@@ -42,11 +42,12 @@ public class JSONWeatherParser {
 
             JSONObject curObj = object.getJSONObject("current");
             JSONObject condObj = curObj.getJSONObject("condition");
-            Temperature temperature = new Temperature(-10, 10, (float) curObj.getDouble("temp_c"));
+            JSONObject fcastObj = object.getJSONObject("forecast");
+            JSONObject dayObj = fcastObj.getJSONArray("forecastday").getJSONObject(0).getJSONObject("day");
+            Temperature temperature = new Temperature((float) dayObj.getDouble("mintemp_c"),
+                    (float) dayObj.getDouble("maxtemp_c"), (float) curObj.getDouble("temp_c"));
 
-            Weather weather = new Weather(place, condObj.getString("text"), temperature, "01");
-
-
+            Weather weather = new Weather(place, condObj.getString("text"), temperature, condObj.getInt("code"));
 
             return weather;
 

@@ -12,9 +12,9 @@ public class City implements Serializable {
     private int maxDegrees;
     private int minDegrees;
     private String status;
-    private String icon;
+    private int icon;
 
-    public City(String name, String country, int degrees, int maxDegrees, int minDegrees, String status, String icon) {
+    public City(String name, String country, int degrees, int maxDegrees, int minDegrees, String status, int icon) {
         this.name = name;
         this.country = country;
         this.degrees = degrees;
@@ -63,7 +63,7 @@ public class City implements Serializable {
         return status;
     }
 
-    public String getIcon() {
+    public int getIcon() {
         return icon;
     }
 

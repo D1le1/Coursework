@@ -4,9 +4,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 public class Utils {
-    public static final String BASE_URL = "https://api.weatherapi.com/v1/current.json?aqi=no&q=";
+    public static final String BASE_URL = "https://api.weatherapi.com/v1/forecast.json?aqi=no&days=1&q=";
 //    public static final String BASE_URL = "https://api.openweathermap.org/data/2.5/weather?q=";
-    public static final String API_KEY = "&key=71ed5614fd0b4d81816110320221112";
+    public static final String API_KEY = "&key=f41f62e75edf49d9b24193133221112";
 //    public static final String API_KEY = "&appid=ac5f13cd5d40ed19ec73979d1ef6932b";
 
     public static JSONObject getObject(String tagName, JSONObject object) throws JSONException

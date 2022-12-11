@@ -147,7 +147,6 @@ public class MainActivity extends AppCompatActivity{
 
 
         offlineCities = (ArrayList<City>) object.readObject();
-        City city = new City("Minsk");
 
         object.close();
         file.close();
@@ -197,8 +196,8 @@ public class MainActivity extends AppCompatActivity{
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void getPostData(Weather weather)
     {
-//        offlineCities.stream().filter(x -> x.getName().equals(weather.getPlace().getCity())).forEach(x -> x.setData(weather));
-        offlineCities.add(new City(weather));
+        offlineCities.stream().filter(x -> x.getName().equals(weather.getPlace().getCity())).forEach(x -> x.setData(weather));
+//        offlineCities.add(new City(weather));
 //        offlineCities.clear();
         viewPager.getAdapter().notifyDataSetChanged();
 

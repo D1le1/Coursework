@@ -3,12 +3,10 @@ package com.example.weatherapplication.weather;
 public class Place {
     private String country;
     private String city;
-    private long lastUpdate;
 
     public Place(String country, String city) {
         this.country = country;
         this.city = city;
-//        this.lastUpdate = lastUpdate;
     }
 
     public String getCountry() {
@@ -17,9 +15,5 @@ public class Place {
 
     public String getCity() {
         return city;
-    }
-
-    public long getLastUpdate() {
-        return lastUpdate;
     }
 }

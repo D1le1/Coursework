@@ -73,11 +73,60 @@ public class MyAdapter extends PagerAdapter {
         tempRange.setText(cities.get(position).getMaxDegrees() + "°C / " + cities.get(position).getMinDegrees() + "°C");
         status.setText(cities.get(position).getStatus());
         date.setText(DateFunctions.getDate());
-        icon.setImageResource(icons.get(cities.get(position).getIcon().substring(0,2)));
+
+        int iconValue = 0;
+        int cityIcon = cities.get(position).getIcon();
+        if(isHere(cityIcon, 1000))
+        {
+            iconValue = R.drawable.cs;
+        }
+        else if(isHere(cityIcon, 1003))
+        {
+            iconValue = R.drawable.fc;
+        }
+        else if(isHere(cityIcon, 1006))
+        {
+            iconValue = R.drawable.sc;
+        }
+        else if(isHere(cityIcon, 1009))
+        {
+            iconValue = R.drawable.bc;
+        }
+        else if(isHere(cityIcon, 1030, 1135, 1147))
+        {
+            iconValue = R.drawable.m;
+        }
+        else if(isHere(cityIcon, 1063, 1069, 1072, 1150, 1153, 1168, 1171, 1180, 1183, 1198, 1204))
+        {
+            iconValue = R.drawable.r;
+        }
+        else if(isHere(cityIcon, 1186, 1189, 1192, 1195, 1201, 1207, 1240, 1243, 1246, 1249, 1252))
+        {
+            iconValue = R.drawable.sr;
+        }
+        else if(isHere(cityIcon, 1087, 1273, 1276, 1279, 1282))
+        {
+            iconValue = R.drawable.thu;
+        }
+        else
+        {
+            iconValue = R.drawable.sn;
+        }
+        icon.setImageResource(iconValue);
 
         container.addView(view, 0);
 
         return view;
+    }
+
+    private boolean isHere(int cityIcon, int... params)
+    {
+        for (int param : params)
+        {
+            if(cityIcon == param)
+                return true;
+        }
+        return false;
     }
 
     @Override
