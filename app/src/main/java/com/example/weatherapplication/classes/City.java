@@ -4,6 +4,7 @@ import com.example.weatherapplication.MainActivity;
 import com.example.weatherapplication.weather.Weather;
 
 import java.io.Serializable;
+import java.util.ArrayList;
 
 public class City implements Serializable {
     private String name;
@@ -13,6 +14,9 @@ public class City implements Serializable {
     private int minDegrees;
     private String status;
     private int icon;
+    private ArrayList<Integer> castTemp;
+    private ArrayList<String> castTime;
+    private ArrayList<Integer> castIcon;
 
     public City(String name, String country, int degrees, int maxDegrees, int minDegrees, String status, int icon) {
         this.name = name;
@@ -37,6 +41,9 @@ public class City implements Serializable {
         this.maxDegrees = (int) Math.ceil(weather.getTemperature().getMaxTemp());
         this.status = MainActivity.formatStatus(weather.getStatus());
         this.icon = weather.getIcon();
+        this.castIcon = weather.getCastIcon();
+        this.castTemp = weather.getCastTemp();
+        this.castTime = weather.getCastTime();
     }
 
     public String getName() {
@@ -67,6 +74,18 @@ public class City implements Serializable {
         return icon;
     }
 
+    public ArrayList<Integer> getCastTemp() {
+        return castTemp;
+    }
+
+    public ArrayList<String> getCastTime() {
+        return castTime;
+    }
+
+    public ArrayList<Integer> getCastIcon() {
+        return castIcon;
+    }
+
     public void setData(Weather weather)
     {
         this.name = weather.getPlace().getCity();
@@ -76,6 +95,9 @@ public class City implements Serializable {
         this.maxDegrees = (int) Math.ceil(weather.getTemperature().getMaxTemp());
         this.status = MainActivity.formatStatus(weather.getStatus());
         this.icon = weather.getIcon();
+        this.castIcon = weather.getCastIcon();
+        this.castTemp = weather.getCastTemp();
+        this.castTime = weather.getCastTime();
     }
 
     @Override

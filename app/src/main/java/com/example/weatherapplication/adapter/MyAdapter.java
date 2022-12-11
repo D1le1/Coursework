@@ -9,7 +9,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
+import androidx.viewpager.widget.ViewPager;
 
 import com.example.weatherapplication.MainActivity;
 import com.example.weatherapplication.R;
@@ -25,10 +29,12 @@ public class MyAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<City> cities;
     private Map<String, Integer> icons ;
+    private SwipeRefreshLayout refresher;
 
-    public MyAdapter(Context context, ArrayList<City> cities) {
+    public MyAdapter(Context context, ArrayList<City> cities, SwipeRefreshLayout refresher) {
         this.context = context;
         this.cities = cities;
+        this.refresher = refresher;
 
         icons = new HashMap<>();
         icons.put("01", R.drawable.cs);
@@ -60,6 +66,7 @@ public class MyAdapter extends PagerAdapter {
 
         TextView name, temperature, tempRange, status, date;
         ImageView icon;
+        RecyclerView castRecycler;
 
         name = view.findViewById(R.id.city_name);
         temperature = view.findViewById(R.id.temperature);
@@ -67,6 +74,7 @@ public class MyAdapter extends PagerAdapter {
         status = view.findViewById(R.id.status);
         date = view.findViewById(R.id.date);
         icon = view.findViewById(R.id.weather_icon);
+        castRecycler = view.findViewById(R.id.cast);
 
         name.setText(cities.get(position).getName() + ", " + cities.get(position).getCountry());
         temperature.setText(String.valueOf(cities.get(position).getDegrees()));
@@ -74,8 +82,46 @@ public class MyAdapter extends PagerAdapter {
         status.setText(cities.get(position).getStatus());
         date.setText(DateFunctions.getDate());
 
-        int iconValue = 0;
+        RecyclerView.LayoutManager layoutManager = new LinearLayoutManager(view.getContext(), LinearLayoutManager.HORIZONTAL, false);
+        castRecycler.setLayoutManager(layoutManager);
+
+        CastRecyclerAdapter adapter = new CastRecyclerAdapter(view.getContext(), cities.get(position).getCastTime(),
+                cities.get(position).getCastTemp(), cities.get(position).getCastIcon());
+        castRecycler.setAdapter(adapter);
+        castRecycler.setOnScrollListener(new RecyclerView.OnScrollListener() {
+            @Override
+            public void onScrollStateChanged(@NonNull RecyclerView recyclerView, int newState) {
+                super.onScrollStateChanged(recyclerView, newState);
+
+                if(refresher != null && !refresher.isRefreshing())
+                {
+                    refresher.setEnabled(newState == RecyclerView.SCROLL_STATE_IDLE);
+                }
+            }
+        });
+
         int cityIcon = cities.get(position).getIcon();
+
+        icon.setImageResource(getIcon(cityIcon));
+
+        container.addView(view, 0);
+
+        return view;
+    }
+
+    private static boolean isHere(int cityIcon, int... params)
+    {
+        for (int param : params)
+        {
+            if(cityIcon == param)
+                return true;
+        }
+        return false;
+    }
+
+    public static int getIcon(int cityIcon)
+    {
+        int iconValue = 0;
         if(isHere(cityIcon, 1000))
         {
             iconValue = R.drawable.cs;
@@ -112,21 +158,7 @@ public class MyAdapter extends PagerAdapter {
         {
             iconValue = R.drawable.sn;
         }
-        icon.setImageResource(iconValue);
-
-        container.addView(view, 0);
-
-        return view;
-    }
-
-    private boolean isHere(int cityIcon, int... params)
-    {
-        for (int param : params)
-        {
-            if(cityIcon == param)
-                return true;
-        }
-        return false;
+        return iconValue;
     }
 
     @Override

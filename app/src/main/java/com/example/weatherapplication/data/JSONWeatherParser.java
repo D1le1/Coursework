@@ -9,6 +9,10 @@ import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
+
 public class JSONWeatherParser {
 //    public static Weather getWeather(String data) throws JSONException {
 //        try {
@@ -47,7 +51,20 @@ public class JSONWeatherParser {
             Temperature temperature = new Temperature((float) dayObj.getDouble("mintemp_c"),
                     (float) dayObj.getDouble("maxtemp_c"), (float) curObj.getDouble("temp_c"));
 
-            Weather weather = new Weather(place, condObj.getString("text"), temperature, condObj.getInt("code"));
+            JSONArray castArr = fcastObj.getJSONArray("forecastday").getJSONObject(0).getJSONArray("hour");
+
+            ArrayList<Integer> castTemp = new ArrayList<>();
+            ArrayList<String> castTime = new ArrayList<>();
+            ArrayList<Integer> castIcon = new ArrayList<>();
+            for (int i=0; i<castArr.length(); i++)
+            {
+                castTemp.add((int) Math.ceil(castArr.getJSONObject(i).getDouble("temp_c")));
+                castTime.add(castArr.getJSONObject(i).getString("time").substring(10));
+                castIcon.add(castArr.getJSONObject(i).getJSONObject("condition").getInt("code"));
+            }
+
+            Weather weather = new Weather(place, condObj.getString("text"), temperature, condObj.getInt("code"),
+                    castTemp, castTime, castIcon);
 
             return weather;
 

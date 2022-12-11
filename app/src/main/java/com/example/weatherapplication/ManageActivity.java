@@ -60,12 +60,7 @@ public class ManageActivity extends AppCompatActivity {
         add = findViewById(R.id.add);
         add.setOnClickListener((View view) -> {
             et = findViewById(R.id.et);
-            if (containsCity(cities, et.getText().toString()))
-            {
-                Toast.makeText(ManageActivity.this, "This city is already on the list", Toast.LENGTH_SHORT).show();
-            }else {
-                renderWeatherData(et.getText().toString());
-            }
+            renderWeatherData(et.getText().toString());
         });
     }
 
@@ -115,7 +110,7 @@ public class ManageActivity extends AppCompatActivity {
     public void renderWeatherData(String city)
     {
         WeatherTask weatherTask = new WeatherTask();
-        weatherTask.execute(new String[]{city});
+        weatherTask.execute(city);
     }
 
     private class WeatherTask extends AsyncTask<String, Void, Weather>
@@ -138,22 +133,26 @@ public class ManageActivity extends AppCompatActivity {
 
             try {
                 City city = new City(weather);
-                cities.add(city);
-                recycler.getAdapter().notifyItemInserted(cities.size() - 1);
+                if(!containsCity(city)) {
+                    cities.add(city);
+                    recycler.getAdapter().notifyItemInserted(cities.size() - 1);
+                }
+                else
+                {
+                    Toast.makeText(ManageActivity.this, "This city already exists", Toast.LENGTH_SHORT).show();
+                }
             }catch (Exception e){
                 Toast.makeText(ManageActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
             }
         }
     }
 
-    private boolean containsCity(ArrayList<City> cities, String city)
+    private boolean containsCity(City city)
     {
         for (City c : cities)
         {
-            if (c.getName().equals(city))
-            {
+            if(c.getName().equals(city.getName()))
                 return true;
-            }
         }
         return false;
     }

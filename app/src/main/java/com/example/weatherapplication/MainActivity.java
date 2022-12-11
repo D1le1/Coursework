@@ -71,7 +71,13 @@ public class MainActivity extends AppCompatActivity{
             startActivityForResult(intent, 100);
         });
 
-        viewPager.setAdapter(new MyAdapter(this, offlineCities));
+        setViewPager();
+
+        refresher.setOnRefreshListener(this::updateData);
+    }
+
+    private void setViewPager() {
+        viewPager.setAdapter(new MyAdapter(this, offlineCities, refresher));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override
@@ -92,8 +98,6 @@ public class MainActivity extends AppCompatActivity{
                 }
             }
         });
-
-        refresher.setOnRefreshListener(this::updateData);
     }
 
     @Override
@@ -107,6 +111,12 @@ public class MainActivity extends AppCompatActivity{
             offlineCities.addAll(cities);
 
             viewPager.getAdapter().notifyDataSetChanged();
+
+            try {
+                saveData();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
         }
     }
 
@@ -157,7 +167,7 @@ public class MainActivity extends AppCompatActivity{
     public void renderWeatherData(String city)
     {
         WeatherTask weatherTask = new WeatherTask();
-        weatherTask.execute(new String[]{city + "&units=metric"});
+        weatherTask.execute(city);
     }
 
     private class WeatherTask extends AsyncTask<String, Void, Weather>
