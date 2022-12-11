@@ -26,6 +26,7 @@ import com.google.android.material.floatingactionbutton.FloatingActionButton;
 
 import org.json.JSONException;
 
+import java.io.IOException;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
@@ -114,17 +115,19 @@ public class ManageActivity extends AppCompatActivity {
     public void renderWeatherData(String city)
     {
         WeatherTask weatherTask = new WeatherTask();
-        weatherTask.execute(new String[]{city + "&units=metric"});
+        weatherTask.execute(new String[]{city});
     }
 
     private class WeatherTask extends AsyncTask<String, Void, Weather>
     {
         @Override
         protected Weather doInBackground(String... params) {
-            String data = new WeatherHttpClient().getWeatherData(params[0]);
             try {
+                String data = new WeatherHttpClient().getWeatherData(params[0]);
                 return JSONWeatherParser.getWeather(data);
-            } catch (JSONException e) {}
+            } catch (JSONException e) {} catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }

@@ -147,6 +147,7 @@ public class MainActivity extends AppCompatActivity{
 
 
         offlineCities = (ArrayList<City>) object.readObject();
+        City city = new City("Minsk");
 
         object.close();
         file.close();
@@ -164,10 +165,13 @@ public class MainActivity extends AppCompatActivity{
     {
         @Override
         protected Weather doInBackground(String... params) {
-            String data = new WeatherHttpClient().getWeatherData(params[0]);
+
             try {
+                String data = new WeatherHttpClient().getWeatherData(params[0]);
                 return JSONWeatherParser.getWeather(data);
-            } catch (JSONException e) {}
+            } catch (JSONException e) {} catch (IOException e) {
+                e.printStackTrace();
+            }
 
             return null;
         }
@@ -193,8 +197,8 @@ public class MainActivity extends AppCompatActivity{
     @RequiresApi(api = Build.VERSION_CODES.N)
     public void getPostData(Weather weather)
     {
-        offlineCities.stream().filter(x -> x.getName().equals(weather.getPlace().getCity())).forEach(x -> x.setData(weather));
-//        offlineCities.add(new City(weather));
+//        offlineCities.stream().filter(x -> x.getName().equals(weather.getPlace().getCity())).forEach(x -> x.setData(weather));
+        offlineCities.add(new City(weather));
 //        offlineCities.clear();
         viewPager.getAdapter().notifyDataSetChanged();
 

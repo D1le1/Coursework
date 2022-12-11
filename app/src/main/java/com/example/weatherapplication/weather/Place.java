@@ -5,10 +5,10 @@ public class Place {
     private String city;
     private long lastUpdate;
 
-    public Place(String country, String city, long lastUpdate) {
+    public Place(String country, String city) {
         this.country = country;
         this.city = city;
-        this.lastUpdate = lastUpdate;
+//        this.lastUpdate = lastUpdate;
     }
 
     public String getCountry() {

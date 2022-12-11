@@ -24,6 +24,11 @@ public class City implements Serializable {
         this.icon = icon;
     }
 
+    public City(String name)
+    {
+        this.name = name;
+    }
+
     public City(Weather weather) {
         this.name = weather.getPlace().getCity();
         this.country = weather.getPlace().getCountry();
