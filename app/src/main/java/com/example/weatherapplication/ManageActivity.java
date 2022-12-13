@@ -1,6 +1,7 @@
 package com.example.weatherapplication;
 
 import android.content.Intent;
+import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.view.LayoutInflater;
@@ -121,6 +122,9 @@ public class ManageActivity extends AppCompatActivity {
                             cities.add(city);
                             recycler.getAdapter().notifyItemInserted(cities.size() - 1);
                         });
+                snackbar.getView().setBackgroundColor(getResources().getColor(R.color.card_bg));
+                snackbar.setTextColor(getResources().getColor(R.color.white));
+                snackbar.setActionTextColor(Color.parseColor("#FFFF8800"));
                 snackbar.show();
             }
         });
