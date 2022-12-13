@@ -8,4 +8,7 @@
     <string name="not_network">No network connection...</string>
     <string name="degree">°C</string>
     <string name="manage_cities">Manage cities</string>
+    <string name="enter_city">Enter city name</string>
+    <string name="search_city">Search City</string>
+    <string name="search">Search</string>
 </resources>

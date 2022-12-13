@@ -3,26 +3,29 @@ package com.example.weatherapplication;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.view.LayoutInflater;
 import android.view.View;
 import android.view.animation.AnimationUtils;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.annotation.Nullable;
+import androidx.appcompat.app.AlertDialog;
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.recyclerview.widget.ItemTouchHelper;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 
-import com.example.weatherapplication.adapter.MyAdapter;
 import com.example.weatherapplication.adapter.RecyclerAdapter;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.data.JSONWeatherParser;
 import com.example.weatherapplication.data.WeatherHttpClient;
 import com.example.weatherapplication.weather.Weather;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
 
@@ -36,8 +39,9 @@ public class ManageActivity extends AppCompatActivity {
     private ImageView back;
     private FloatingActionButton add;
     private ArrayList<City> cities;
-    private EditText et;
     private ItemTouchHelper helper;
+    private AlertDialog dialog;
+
 
     @Override
     protected void onCreate(@Nullable Bundle savedInstanceState) {
@@ -56,11 +60,12 @@ public class ManageActivity extends AppCompatActivity {
         recycler = findViewById(R.id.recycler);
         setRecycler();
         setHelper();
+        setDialog();
 
         add = findViewById(R.id.add);
-        add.setOnClickListener((View view) -> {
-            et = findViewById(R.id.et);
-            renderWeatherData(et.getText().toString());
+
+        add.setOnClickListener(view -> {
+            dialog.show();
         });
     }
 
@@ -72,6 +77,21 @@ public class ManageActivity extends AppCompatActivity {
         setResult(RESULT_OK, intent);
 
         super.onBackPressed();
+    }
+
+    private void setDialog()
+    {
+        LayoutInflater inflater = this.getLayoutInflater();
+        View view = inflater.inflate(R.layout.dialog_item,null);
+        dialog = (new AlertDialog.Builder(this)).create();
+        dialog.setView(view);
+
+        EditText searchText = view.findViewById(R.id.search_text);
+        Button searchButton = view.findViewById(R.id.search_button);
+
+        searchButton.setOnClickListener(v -> {
+            renderWeatherData(searchText.getText().toString());
+        });
     }
 
     public void setHelper()
@@ -91,8 +111,17 @@ public class ManageActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
+                City city = cities.get(viewHolder.getAdapterPosition());
+
                 cities.remove(viewHolder.getAdapterPosition());
                 recycler.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+
+                Snackbar snackbar = Snackbar.make(recycler, "City Removed", Snackbar.LENGTH_LONG).
+                        setAction("UNDO", view -> {
+                            cities.add(city);
+                            recycler.getAdapter().notifyItemInserted(cities.size() - 1);
+                        });
+                snackbar.show();
             }
         });
         helper.attachToRecyclerView(recycler);
@@ -141,8 +170,11 @@ public class ManageActivity extends AppCompatActivity {
                 {
                     Toast.makeText(ManageActivity.this, "This city already exists", Toast.LENGTH_SHORT).show();
                 }
-            }catch (Exception e){
-                Toast.makeText(ManageActivity.this, "Check your Internet connection", Toast.LENGTH_SHORT).show();
+            }catch (NullPointerException e){
+                Toast.makeText(ManageActivity.this, "Something went wrong. Check your internet connection or city name", Toast.LENGTH_SHORT).show();
+            }catch (Exception e)
+            {
+                Toast.makeText(ManageActivity.this, "There is no such city", Toast.LENGTH_SHORT).show();
             }
         }
     }
