@@ -1,16 +1,13 @@
 package com.example.weatherapplication;
 
 import android.annotation.SuppressLint;
-import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Build;
 import android.os.Bundle;
-import android.view.View;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -207,8 +204,6 @@ public class MainActivity extends AppCompatActivity{
     public void getPostData(Weather weather)
     {
         offlineCities.stream().filter(x -> x.getName().equals(weather.getPlace().getCity())).forEach(x -> x.setData(weather));
-//        offlineCities.add(new City(weather));
-//        offlineCities.clear();
         viewPager.getAdapter().notifyDataSetChanged();
 
         try {
