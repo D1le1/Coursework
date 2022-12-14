@@ -4,12 +4,16 @@ import android.content.Intent;
 import android.graphics.Color;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.CountDownTimer;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.annotation.NonNull;
@@ -26,6 +30,7 @@ import com.example.weatherapplication.data.JSONWeatherParser;
 import com.example.weatherapplication.data.WeatherHttpClient;
 import com.example.weatherapplication.weather.Weather;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+import com.google.android.material.snackbar.BaseTransientBottomBar;
 import com.google.android.material.snackbar.Snackbar;
 
 import org.json.JSONException;
@@ -112,23 +117,64 @@ public class ManageActivity extends AppCompatActivity {
 
             @Override
             public void onSwiped(@NonNull RecyclerView.ViewHolder viewHolder, int direction) {
-                City city = cities.get(viewHolder.getAdapterPosition());
-
-                cities.remove(viewHolder.getAdapterPosition());
-                recycler.getAdapter().notifyItemRemoved(viewHolder.getAdapterPosition());
+                int position = viewHolder.getAdapterPosition();
+                City city = cities.get(position);
+                cities.remove(position);
+                recycler.getAdapter().notifyItemRemoved(position);
 
                 Snackbar snackbar = Snackbar.make(recycler, "City Removed", Snackbar.LENGTH_LONG).
                         setAction("UNDO", view -> {
-                            cities.add(city);
-                            recycler.getAdapter().notifyItemInserted(cities.size() - 1);
+                            setCity(city, position);
+                            recycler.getAdapter().notifyItemInserted(position);
                         });
-                snackbar.getView().setBackgroundColor(getResources().getColor(R.color.card_bg));
+
+                ViewGroup contentLay = (ViewGroup) snackbar.getView().findViewById(com.google.android.material.R.id.snackbar_text).getParent();
+                View view = ManageActivity.this.getLayoutInflater().inflate(R.layout.progressbar_item, null);
+                TextView tv = view.findViewById(R.id.timer);
+                new CountDownTimer(5100, 1000) {
+
+                    public void onTick(long mills) {
+                        tv.setText(mills/1000 + "");
+                    }
+
+                    public void onFinish() {
+                    }
+
+                }.start();
+                contentLay.addView(view, 0);
+
                 snackbar.setTextColor(getResources().getColor(R.color.white));
                 snackbar.setActionTextColor(Color.parseColor("#FFFF8800"));
+                snackbar.setBackgroundTint(getResources().getColor(R.color.card_bg));
+                snackbar.setAnimationMode(BaseTransientBottomBar.ANIMATION_MODE_SLIDE);
+                snackbar.setDuration(4600);
                 snackbar.show();
             }
         });
         helper.attachToRecyclerView(recycler);
+    }
+
+    private void setCity(City city, int position)
+    {
+        ArrayList<City> newCities = new ArrayList<>();
+        int i = 0;
+        if(position == cities.size())
+        {
+            cities.add(city);
+        }
+        else {
+            for (City c : cities) {
+                if (i != position) {
+                    newCities.add(c);
+                } else {
+                    newCities.add(city);
+                    newCities.add(c);
+                }
+                i++;
+            }
+            cities.clear();
+            cities.addAll(newCities);
+        }
     }
 
     public void setRecycler()
