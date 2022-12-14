@@ -14,29 +14,6 @@ import java.util.HashMap;
 import java.util.Map;
 
 public class JSONWeatherParser {
-//    public static Weather getWeather(String data) throws JSONException {
-//        try {
-//            JSONObject object = new JSONObject(data);
-//
-//            JSONObject sysObj = Utils.getObject("sys", object);
-//            Place place = new Place(Utils.getString("country", sysObj), Utils.getString("name", object), Utils.getInt("dt", object));
-//
-//            JSONObject mainObj = Utils.getObject("main", object);
-//            Temperature temperature = new Temperature(Utils.getFloat("temp_min", mainObj), Utils.getFloat("temp_max", mainObj), Utils.getFloat("temp", mainObj));
-//
-//            JSONArray jsonArray = object.getJSONArray("weather");
-//            JSONObject weatherObj = jsonArray.getJSONObject(0);
-//            Weather weather = new Weather(place, Utils.getString("description", weatherObj), temperature, Utils.getString("icon", weatherObj));
-//
-//            return weather;
-//
-//        }
-//        catch (JSONException e){}
-//        catch (Exception e){}
-//
-//        return null;
-//    }
-
     public static Weather getWeather(String data) throws JSONException {
         try {
             JSONObject object = new JSONObject(data);
@@ -68,9 +45,7 @@ public class JSONWeatherParser {
 
             return weather;
 
-        }
-        catch (JSONException e){}
-        catch (Exception e){}
+        } catch (Exception e){}
 
         return null;
     }

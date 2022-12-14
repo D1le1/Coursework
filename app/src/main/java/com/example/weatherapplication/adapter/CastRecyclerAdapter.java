@@ -11,7 +11,6 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.example.weatherapplication.R;
-import com.example.weatherapplication.classes.City;
 
 import java.util.ArrayList;
 
@@ -40,7 +39,7 @@ public class CastRecyclerAdapter extends RecyclerView.Adapter<CastRecyclerAdapte
     public void onBindViewHolder(@NonNull CityViewHolder holder, int position) {
         holder.time.setText(castTime.get(position));
         holder.temperature.setText(castTemp.get(position).toString() + "°C");
-        holder.icon.setImageResource(MyAdapter.getIcon(castIcon.get(position)));
+        holder.icon.setImageResource(ViewPagerAdapter.getIcon(castIcon.get(position)));
     }
 
     @Override

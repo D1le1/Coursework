@@ -15,7 +15,7 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.ViewPager;
 
-import com.example.weatherapplication.adapter.MyAdapter;
+import com.example.weatherapplication.adapter.ViewPagerAdapter;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.data.JSONWeatherParser;
 import com.example.weatherapplication.data.WeatherHttpClient;
@@ -74,7 +74,7 @@ public class MainActivity extends AppCompatActivity{
     }
 
     private void setViewPager() {
-        viewPager.setAdapter(new MyAdapter(this, offlineCities, refresher));
+        viewPager.setAdapter(new ViewPagerAdapter(this, offlineCities, refresher));
 
         viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
             @Override

@@ -6,46 +6,28 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
-import android.widget.Toast;
 
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.LinearLayoutManager;
 import androidx.recyclerview.widget.RecyclerView;
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout;
 import androidx.viewpager.widget.PagerAdapter;
-import androidx.viewpager.widget.ViewPager;
 
-import com.example.weatherapplication.MainActivity;
 import com.example.weatherapplication.R;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.functionality.DateFunctions;
-import com.example.weatherapplication.functionality.NetworkDetector;
 
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Map;
 
-public class MyAdapter extends PagerAdapter {
+public class ViewPagerAdapter extends PagerAdapter {
     private Context context;
     private ArrayList<City> cities;
-    private Map<String, Integer> icons ;
     private SwipeRefreshLayout refresher;
 
-    public MyAdapter(Context context, ArrayList<City> cities, SwipeRefreshLayout refresher) {
+    public ViewPagerAdapter(Context context, ArrayList<City> cities, SwipeRefreshLayout refresher) {
         this.context = context;
         this.cities = cities;
         this.refresher = refresher;
-
-        icons = new HashMap<>();
-        icons.put("01", R.drawable.cs);
-        icons.put("02", R.drawable.fc);
-        icons.put("03", R.drawable.sc);
-        icons.put("04", R.drawable.bc);
-        icons.put("50", R.drawable.m);
-        icons.put("13", R.drawable.sn);
-        icons.put("10", R.drawable.r);
-        icons.put("09", R.drawable.sr);
-        icons.put("11", R.drawable.thu);
     }
 
 
