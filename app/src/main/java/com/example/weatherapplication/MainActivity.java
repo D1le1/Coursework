@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.view.animation.AnimationUtils;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import androidx.annotation.Nullable;
 import androidx.annotation.RequiresApi;
@@ -157,8 +158,6 @@ public class MainActivity extends AppCompatActivity{
 
         object.close();
         file.close();
-
-        viewPager.getAdapter().notifyDataSetChanged();
     }
 
     public void renderWeatherData(String city)
