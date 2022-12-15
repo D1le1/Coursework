@@ -28,6 +28,7 @@ import com.example.weatherapplication.adapter.RecyclerAdapter;
 import com.example.weatherapplication.classes.City;
 import com.example.weatherapplication.data.JSONWeatherParser;
 import com.example.weatherapplication.data.WeatherHttpClient;
+import com.example.weatherapplication.functionality.NetworkDetector;
 import com.example.weatherapplication.weather.Weather;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
 import com.google.android.material.snackbar.BaseTransientBottomBar;
@@ -71,7 +72,13 @@ public class ManageActivity extends AppCompatActivity {
         add = findViewById(R.id.add);
 
         add.setOnClickListener(view -> {
-            dialog.show();
+            if(NetworkDetector.isConnected(this)) {
+                dialog.show();
+            }
+            else
+            {
+                Toast.makeText(this, "Turn on Wi-F or Mobile Data", Toast.LENGTH_SHORT).show();
+            }
         });
     }
 
@@ -79,7 +86,7 @@ public class ManageActivity extends AppCompatActivity {
     public void onBackPressed() {
 
         Intent intent = new Intent();
-        intent.putExtra("cities", (Serializable) cities);
+        intent.putExtra("cities", cities);
         setResult(RESULT_OK, intent);
 
         super.onBackPressed();
